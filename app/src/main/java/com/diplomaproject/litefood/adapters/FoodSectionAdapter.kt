@@ -72,7 +72,7 @@ class FoodSectionAdapter(
         holder.bind(section)
 
         holder.binding.cardFoodSection.setOnClickListener {
-            viewModel.onFoodSectionClick(position)
+            viewModel.onFoodSectionClicked(position)
         }
     }
 

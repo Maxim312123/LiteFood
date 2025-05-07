@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -11,12 +12,15 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.diplomaproject.litefood.R
 import com.diplomaproject.litefood.data.HitSalesProduct
 import com.diplomaproject.litefood.databinding.ItemHitSalesProductBinding
+import com.diplomaproject.litefood.fragments.view_models.MainFragmentViewModel
+import com.diplomaproject.litefood.utils.APPLICATION_CONTEXT
 import com.google.android.material.carousel.MaskableFrameLayout
 import com.google.android.material.math.MathUtils.lerp
 import com.google.firebase.storage.FirebaseStorage
 
 class HitSalesProductsAdapter(
     private val context: Context,
+    private val viewModel: MainFragmentViewModel,
     private val hitSalesProducts: MutableList<HitSalesProduct>
 ) :
     RecyclerView.Adapter<HitSalesProductsAdapter.ViewHolder>() {
@@ -27,6 +31,7 @@ class HitSalesProductsAdapter(
         val ivProduct = binding.ivProduct
         val tvProductName = binding.tvProductName
         val tvProductPrice = binding.tvProductPrice
+        val cardProduct = binding.cardProduct
 
         fun bind(product: HitSalesProduct) {
             tvProductName.text = product.name
@@ -80,7 +85,11 @@ class HitSalesProductsAdapter(
     override fun onBindViewHolder(holder: HitSalesProductsAdapter.ViewHolder, position: Int) {
         val product = hitSalesProducts[position]
         holder.bind(product)
+        changeCarouselItemState(holder)
+        setupViewListeners(holder, position)
+    }
 
+    private fun changeCarouselItemState(holder: ViewHolder) {
         (holder.itemView as MaskableFrameLayout).setOnMaskChangedListener { maskRect ->
             holder.tvProductName.setTranslationX(maskRect.left)
             holder.tvProductName.setAlpha(lerp(1F, 0F, maskRect.left))
@@ -89,4 +98,14 @@ class HitSalesProductsAdapter(
             holder.tvProductPrice.setAlpha(lerp(1F, 0F, maskRect.left))
         }
     }
+
+    private fun setupViewListeners(holder: ViewHolder, position: Int) {
+
+        holder.cardProduct.setOnClickListener {
+            viewModel.onHitSalesProductCLick(position)
+        }
+
+    }
+
+    fun getProduct(position: Int) = hitSalesProducts.get(position)
 }

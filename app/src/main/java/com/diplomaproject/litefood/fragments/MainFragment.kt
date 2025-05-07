@@ -41,6 +41,7 @@ class MainFragment : Fragment(), MenuProvider {
     private lateinit var rvFoodSections: RecyclerView
     private lateinit var rvHitSales: RecyclerView
     private lateinit var foodSectionAdapter: FoodSectionAdapter
+    private lateinit var hitSalesProductAdapter: HitSalesProductsAdapter
 
     private val firestoreDatabaseRepository: FirestoreDatabaseRepository by lazy {
         FirebaseService.firestoreDatabaseRepository
@@ -63,7 +64,7 @@ class MainFragment : Fragment(), MenuProvider {
 
         completingCoroutines.add(fetchFoodSectionsJob)
         completingCoroutines.add(fetchHitSalesProductsJob)
-        
+
         fetchFoodSectionsJob.invokeOnCompletion {
             removeCompletingCoroutine(fetchFoodSectionsJob)
         }
@@ -87,19 +88,14 @@ class MainFragment : Fragment(), MenuProvider {
         super.onViewCreated(view, savedInstanceState)
         setupToolbar()
         initViews()
-        setupViewOnserves()
+        setupViewObserves()
     }
 
-    private fun setupViewOnserves() {
+    private fun setupViewObserves() {
         viewModel.foodSections.observe(viewLifecycleOwner) { foodSections ->
             foodSectionAdapter =
                 FoodSectionAdapter(foodSections.asReversed(), viewModel)
             rvFoodSections.adapter = foodSectionAdapter
-        }
-
-        viewModel.hitSalesProducts.observe(viewLifecycleOwner) { hitSalesProducts ->
-            val hitSalesAdapter = HitSalesProductsAdapter(requireActivity(), hitSalesProducts)
-            rvHitSales.adapter = hitSalesAdapter
         }
 
         viewModel.selectedFoodSectionPosition.observe(viewLifecycleOwner) { position ->
@@ -109,9 +105,73 @@ class MainFragment : Fragment(), MenuProvider {
                     resources.getStringArray(R.array.toolbar_title_food_section_name).get(position)
 
                 loadFoodSectionsProducts(foodSectionName, toolbarTitle)
-                viewModel.onFoodSectionClick(-1)
+                viewModel.onFoodSectionClicked(-1)
             }
         }
+
+        viewModel.hitSalesProducts.observe(viewLifecycleOwner) { hitSalesProducts ->
+            hitSalesProductAdapter =
+                HitSalesProductsAdapter(requireActivity(), viewModel, hitSalesProducts)
+            rvHitSales.adapter = hitSalesProductAdapter
+        }
+
+        viewModel.selectedHitSalesProductPosition.observe(viewLifecycleOwner) { position ->
+            if (position != -1) {
+//                val productRef = hitSalesProductAdapter.getProduct(position).productRef
+//                val job = viewLifecycleOwner.lifecycleScope.launch {
+//                    viewModel.fetchHitSalesProductData(productRef)
+//                }
+//
+//                completingCoroutines.add(job)
+//                job.invokeOnCompletion {
+//                    removeCompletingCoroutine(job)
+//                }
+
+                fetchProductData(position)
+                viewModel.onHitSalesProductClicked(-1)
+            }
+        }
+
+//        viewModel.hitSalesProduct.observe(viewLifecycleOwner) { product ->
+//            if (product != null) {
+//                parentFragmentManager.beginTransaction()
+//                    .replace(
+//                        R.id.fragment_container,
+//                        ProductDescriptionFragment.newInstance(product)
+//                    )
+//                    .addToBackStack(null)
+//                    .commit()
+//                viewModel.onFetchedHitSalesProduct()
+//            }
+//        }
+
+    }
+
+    private fun fetchProductData(position: Int) {
+
+        val productRef = hitSalesProductAdapter.getProduct(position).productRef
+
+
+        val job = viewLifecycleOwner.lifecycleScope.launch {
+            val product = firestoreDatabaseRepository.fetchHitSalesProductData(productRef)
+
+            if (product != null) {
+                parentFragmentManager.beginTransaction()
+                    .replace(
+                        R.id.fragment_container,
+                        ProductDescriptionFragment.newInstance(product)
+                    )
+                    .addToBackStack(null)
+                    .commit()
+                viewModel.onFetchedHitSalesProduct()
+            }
+        }
+
+        completingCoroutines.add(job)
+        job.invokeOnCompletion {
+            removeCompletingCoroutine(job)
+        }
+
     }
 
     private fun setupToolbar() {
@@ -171,11 +231,6 @@ class MainFragment : Fragment(), MenuProvider {
             it.cancel()
         }
         completingCoroutines.clear()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        Toast.makeText(requireActivity(), "${completingCoroutines.size}", Toast.LENGTH_SHORT).show()
     }
 
     private fun removeCompletingCoroutine(job: Job) {

@@ -8,7 +8,6 @@ import com.diplomaproject.litefood.data.HitSalesProduct
 import com.diplomaproject.litefood.data.Product
 import com.diplomaproject.litefood.utils.AppUtils
 import com.google.firebase.firestore.DocumentReference
-import com.google.firebase.firestore.Source
 import com.google.firebase.firestore.toObject
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -194,6 +193,19 @@ class FirestoreDatabaseRepository {
                 }
             res.await()
             products
+        }
+    }
+
+    suspend fun fetchHitSalesProductData(documentReference: DocumentReference): Product? {
+        var product: Product? = null
+        return coroutineScope {
+            val result = documentReference.get().addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    product = task.result.toObject<Product>()
+                }
+            }
+            result.await()
+            product
         }
     }
 }
