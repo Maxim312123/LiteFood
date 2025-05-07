@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/myOrders"
+        android:icon="@drawable/ic_my_orders"
+        android:title="@string/section_my_orders" />
+
+    <item
+        android:id="@+id/paymentMethods"
+        android:icon="@drawable/ic_payment_methods"
+        android:title="@string/section_payment_methods" />
+
+    <item
+        android:id="@+id/favorites"
+        android:icon="@drawable/ic_not_added_favorite"
+        android:title="@string/section_favorite" />
+
+    <item
+        android:id="@+id/addresses"
+        android:icon="@drawable/ic_addresses"
+        android:title="@string/section_my_addresses" />
+
+    <item
+        android:id="@+id/settings"
+        android:icon="@drawable/ic_settings"
+        android:title="@string/section_settings" />
+
+    <item
+        android:id="@+id/about"
+        android:icon="@drawable/ic_about"
+        android:title="@string/section_about_us" />
+</menu>

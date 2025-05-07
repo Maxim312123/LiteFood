@@ -1,0 +1,148 @@
+<resources>
+    <!--    App-->
+    <string name="app_name" translatable="false">LiteFood</string>
+
+    <!--    Common-->
+    <string name="next">Далее</string>
+    <string name="profile">Профиль</string>
+    <string name="currency">%1$s руб</string>
+    <string name="quantity">%1$d шт</string>
+
+    <!--    WelcomeActivity-->
+    <string name="greeting_title">Добро пожаловать!</string>
+    <string name="policy_notice">Нажимая на кнопку выше вы соглашаетесь с нашими Условиями использования и Политикой конфиденциальности.</string>
+
+    <!--    ProfileEditingActivity-->
+    <string name="profile_editing_profile">Профиль</string>
+    <string name="profile_editing_name">Имя</string>
+    <string name="profile_editing_telephone">Телефон</string>
+    <string name="profile_editing_date_of_birth">Дата рождения</string>
+    <string name="profile_editing_gender">Пол</string>
+    <string name="profile_editing_email">Электронная почта</string>
+    <string name="profile_editing_payment_method">Способ оплаты</string>
+    <string name="profile_editing_invalid_name">Неккоректное имя</string>
+
+    <!--    AuthorizationActivity-->
+    <string name="invalid_phone_number">Недопустимый формат номера</string>
+    <string name="invalid_operator_code">Такого мобильного оператора нет</string>
+
+    <!--    VerificationCodeActivity-->
+    <string name="successful_login">Вход выполнен</string>
+    <string name="input_verification_code">Введите код из SMS</string>
+
+    <!--    AuthorizedProfileFragment-->
+    <string name="authorized_profile_toolbar_profile">Профиль</string>
+    <string name="authorized_profile_overflow_menu_edit_profile">Редактировать профиль</string>
+    <string name="authorized_profile_overflow_menu_exit">Выйти</string>
+    <string name="authorized_profile_overflow_menu_delete_account">Удалить аккаунт</string>
+    <string name="authorized_profile_phone">Телефон</string>
+    <string name="authorized_profile_date_of_birth">Дата рождения</string>
+    <string name="authorized_profile_gender">Пол</string>
+    <string name="authorized_profile_email">Электронная почта</string>
+    <string name="authorized_profile_payment_method">Способ оплаты</string>
+    <string name="authorized_profile_notifications">Уведомления</string>
+    <string name="authorized_profile_name_not_added">Не указано</string>
+    <string name="authorized_profile_phone_number_not_added">Не указан</string>
+    <string name="authorized_profile_date_of_birth_not_added">Не указана</string>
+    <string name="authorized_profile_gender_not_added">Не указан</string>
+    <string name="authorized_profile_email_not_added">Не указана</string>
+    <string name="authorized_profile_payment_method_not_added">Не указан</string>
+
+    <!--   FoodCategoryFragment-->
+    <string name="food_category_fragment_toolbar_title">Категории</string>
+
+    <!--    ProfileEditingActivity-->
+    <string name="profile_editing_name_not_provided">Не указано</string>
+    <string name="profile_editing_phone_number_not_provided">Не указан</string>
+    <string name="profile_editing_date_of_birth_not_provided">Не указана</string>
+    <string name="profile_editing_gender_not_provided">Не указан</string>
+    <string name="profile_editing_email_not_provided">Не указана</string>
+    <string name="profile_editing_payment_method_not_provided">Не указан</string>
+
+    <!--    ChangePhoneNumberActivity-->
+    <string name="change_phone_number_toolbar_title">Смена номера</string>
+    <string name="change_phone_number_label_new_phone_number">Новый номер</string>
+    <string name="change_phone_number_policy">Нажимая на кнопку “Далее”, вы соглашаетесь с
+        нашими Условиями использования и Политикой конфиденциальности.</string>
+
+    <!--    NewPhoneNumberVerificationCodeFragment-->
+    <string name="is_invalid_phone_number">Неверный номер?</string>
+    <string name="invalid_verification_code">Неверный код</string>
+    <string name="edit_text_verification_code_is_empty">Введите код</string>
+    <string name="send_verification_code_again">Отправить код еще раз</string>
+    <string name="send_verification_code_again_in">Отправить код еще раз можно через</string>
+
+    <!--    PaymentMethodsActivity-->
+    <string name="payment_methods_toolbar_title">Способы оплаты</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+    <string name="empty_addressess_fragment_text">У вас пока нет добавленных адресов.
+        \nДля добавления адреса нужно дать разрешение на доступ к вашему местоположению</string>
+
+    <!-- Preference Titles -->
+    <string name="general_header">Общие</string>
+    <string name="list_preference_title">Язык</string>
+    <string name="list_preference_dialog_title">Выберите язык</string>
+
+    <!--   ProductFragment strings-->
+    <string name="category_name_burgers">Бургеры</string>
+    <string name="category_name_coffee">Кофе</string>
+    <string name="category_name_desserts">Десерты</string>
+    <string name="category_name_kebab">Шаурма</string>
+    <string name="category_name_drinks">Напитки</string>
+    <string name="category_name_french_fries">Картошка фри</string>
+    <string name="category_name_hot_dogs">Хот-доги</string>
+    <string name="add_button">Добавить</string>
+    <string name="button_state_added">Добавлен</string>
+    <string name="toast_product_is_added_to_favorite">Продукт добавлен в избранное</string>
+    <string name="toast_product_is_deleted_from_favorite">Продукт удален из избранное</string>
+
+    <!--    BottomNavigationView-->
+    <string name="section_main">Главная</string>
+    <string name="section_categories">Категории</string>
+    <string name="section_basket">Корзина</string>
+    <string name="section_profile">Профиль</string>
+
+    <!--    NavigationView-->
+    <string name="section_my_orders">Мои заказы</string>
+    <string name="section_payment_methods">Способы оплаты</string>
+    <string name="section_favorite">Избранное</string>
+    <string name="section_my_addresses">Мои адресса</string>
+    <string name="section_settings">Настройки</string>
+    <string name="section_about_us">О нас</string>
+
+    <!--    ShoppingBasketFragment-->
+    <string name="basket_toolbar_title">Корзина</string>
+    <string name="address_is_not_addded">Адрес не добавлен</string>
+    <string name="choose_products">Выберите продукты</string>
+
+    <!--    SettingsActivity-->
+    <string name="settings_activity_title">Настройки</string>
+
+    <!--    AddressesFragment-->
+    <string name="popup_menu_delete">Удалить</string>
+
+    <!--    ProductDescriptionFragment-->
+    <string name="product_description_fragment_toolbar_title">Описание</string>
+    <string name="ingredients">Состав:</string>
+    <string name="pfc_for_one_serving">БЖУ (на 1 порцию):</string>
+    <string name="calorific_value"><![CDATA[<b>Калорийность</b>: примерно <b>%1$d ккал</b>]]></string>
+    <string name="macronutrients">• Белки: %1$s г \n• Жиры: %2$s г \n• Углеводы: %3$s г</string>
+    <string name="productWeight"><![CDATA[<b>Вес</b>: %1$d г ]]></string>
+    <string name="productVolume"><![CDATA[<b>Объем</b>: %1$d мл ]]></string>
+    <string name="add_button_label">Добавить</string>
+
+    <!--    OrderRegistrationFragment-->
+    <string name="toolbar_title">Оформление заказа</string>
+    <string name="total">Итого</string>
+    <string name="product_count">Количество</string>
+    <string name="terms_of_use_and_policy">Согласен с нашими Условиями использования и Политикой конфиденциальности.</string>
+    <string name="order">Заказать</string>
+
+
+    <!--    MainFragment-->
+    <string name="title_sections">Разделы</string>
+    <string name="title_hit_sales">Хит продаж</string>
+    <string name="title_for_vegetarians">Для вегетарианцев</string>
+</resources>

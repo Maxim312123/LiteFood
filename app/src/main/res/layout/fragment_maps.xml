@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <fragment
+        android:id="@+id/fragmentMap"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="56dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        tools:context=".fragments.MapsFragment" />
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="?attr/colorPrimary"
+        android:backgroundTint="@color/white"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
+        app:layout_constraintBottom_toTopOf="@+id/fragmentMap"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:title="Выберите свой адрес"
+        app:titleCentered="true" />
+
+    <ImageButton
+        android:id="@+id/imageButtonMyLocation"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/background_imagebutton"
+        android:contentDescription="My location"
+        android:src="@drawable/ic_my_location"
+        app:layout_constraintBottom_toTopOf="@+id/cardView"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <ImageButton
+        android:id="@+id/imageButtonZoomIn"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/background_imagebutton"
+        android:contentDescription="Zoom in"
+        android:src="@drawable/ic_plus"
+        app:layout_constraintBottom_toTopOf="@+id/imageButtonZoomOut"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <ImageButton
+        android:id="@+id/imageButtonZoomOut"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="40dp"
+        android:background="@drawable/background_imagebutton"
+        android:contentDescription="Zoom out"
+        android:src="@drawable/ic_minus"
+        app:layout_constraintBottom_toTopOf="@id/imageButtonMyLocation"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cardView"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:background="@color/white"
+        app:cardCornerRadius="12dp"
+        app:layout_constraintBottom_toBottomOf="@+id/fragmentMap"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/textViewAddressTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:text="Выбранный адрес"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <EditText
+                android:id="@+id/editTextAddress"
+                android:layout_width="310dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="17dp"
+                android:layout_marginTop="8dp"
+                android:autofillHints="postalAddress"
+                android:inputType="text"
+                android:textSize="16sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/textViewAddressTitle"
+                tools:text="Гомель, ул. Крестьянская, д. 22" />
+
+            <TextView
+                android:id="@+id/textViewApartmentNumberTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="15dp"
+                android:text="Квартира"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/editTextAddress" />
+
+            <EditText
+                android:id="@+id/editTextApartmentNumber"
+                android:layout_width="60dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="17dp"
+                android:layout_marginTop="8dp"
+                android:textSize="16sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textViewApartmentNumberTitle"
+                tools:text="438" />
+
+            <TextView
+                android:id="@+id/textViewComment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="15dp"
+                android:text="Комментарий к адресу"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toEndOf="@+id/textViewApartmentNumberTitle"
+                app:layout_constraintTop_toBottomOf="@id/editTextAddress" />
+
+            <EditText
+                android:id="@+id/editTextComment"
+                android:layout_width="220dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="37dp"
+                android:layout_marginTop="8dp"
+                android:textSize="16sp"
+                app:layout_constraintStart_toEndOf="@+id/editTextApartmentNumber"
+                app:layout_constraintTop_toBottomOf="@+id/textViewComment"
+                tools:text="Домашний адрес" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/buttonSubmit"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/background_normal_button"
+                android:backgroundTintMode="src_over"
+                android:gravity="center"
+                android:text="Готово"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

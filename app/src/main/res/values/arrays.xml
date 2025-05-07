@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Preference -->
+    <string-array name="languages">
+        <item>Русский</item>
+        <item>Английский</item>
+    </string-array>
+
+    <string-array name="languages_values">
+        <item>ru</item>
+        <item>en</item>
+    </string-array>
+
+    <string-array name="themes">\
+        <item>Светлая</item>
+        <item>Темная</item>
+    </string-array>
+
+    <string-array name="themes_values">
+        <item>Светлая</item>
+        <item>Темная</item>
+    </string-array>
+
+    <string-array name="toolbar_title_food_category_name">
+        <item>Бургеры</item>
+        <item>Кофе</item>
+        <item>Десерты</item>
+        <item>Шаурма</item>
+        <item>Напитки</item>
+        <item>Картошка фри</item>
+        <item>Хот-доги</item>
+        <item>Пицца</item>
+        <item>Сэндвичи</item>
+        <item>Супы</item>
+        <item>Суши</item>
+        <item>Чай</item>
+    </string-array>
+
+    <string-array name="toolbar_title_food_section_name">
+        <item>Веганство</item>
+        <item>Острое</item>
+        <item>Свинина</item>
+        <item>Фастфуд</item>
+        <item>Напитки</item>
+        <item>Сладкое</item>
+        <item>Курятина</item>
+        <item>Говядина</item>
+    </string-array>
+</resources>

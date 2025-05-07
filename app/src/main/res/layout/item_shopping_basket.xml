@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/productCardView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp"
+    android:clickable="true"
+    android:foreground="?attr/selectableItemBackground"
+    app:cardCornerRadius="20dp"
+    app:cardElevation="4dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <CheckBox
+            android:id="@+id/is_for_buying"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:checked="true"
+            app:layout_constraintBaseline_toBaselineOf="@+id/overflow_menu"
+            app:layout_constraintBottom_toTopOf="@+id/productImage"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.5" />
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/overflow_menu"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="4dp"
+            android:background="@drawable/selector_view"
+            android:src="@drawable/ic_overflow"
+            app:layout_constraintBottom_toTopOf="@+id/linearLayout10"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.5" />
+
+        <ImageView
+            android:id="@+id/productImage"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginStart="16dp"
+            android:scaleType="fitCenter"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/guideline4"
+            app:layout_constraintVertical_bias="0.096"
+            tools:src="@drawable/cola" />
+
+        <LinearLayout
+            android:id="@+id/linearLayout10"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="130dp"
+            android:layout_marginTop="5dp"
+            android:gravity="start"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toTopOf="@+id/linearLayout8"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toEndOf="@+id/productImage"
+            app:layout_constraintTop_toBottomOf="@id/guideline4">
+
+            <TextView
+                android:id="@+id/name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                tools:text="Кока-кола 0.33 мл" />
+
+            <TextView
+                android:id="@+id/price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:textStyle="bold"
+                tools:text="1.99 руб" />
+        </LinearLayout>
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_begin="48dp" />
+
+        <LinearLayout
+            android:id="@+id/linearLayout8"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="130dp"
+            android:layout_marginTop="15dp"
+            android:gravity="start"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/productImage"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout10">
+
+            <ImageButton
+                android:id="@+id/decrease_amount"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="start|center"
+                android:background="@drawable/selector_view"
+                android:src="@drawable/ic_minus"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/counter"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <EditText
+                android:id="@+id/amount"
+                android:layout_width="40dp"
+                android:layout_height="30dp"
+                android:layout_gravity="start|center"
+                android:background="@drawable/bg_item_counter"
+                android:focusableInTouchMode="false"
+                android:maxLength="99"
+                android:textAlignment="center"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/increase_count"
+                tools:text="1" />
+
+            <ImageButton
+                android:id="@+id/increase_amount"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="start|center"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/selector_view"
+                android:src="@drawable/ic_plus"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/appCompatButton" />
+
+        </LinearLayout>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnBuyProduct"
+            android:layout_width="150dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="20dp"
+            android:text="Купить"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout8" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</com.google.android.material.card.MaterialCardView>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Preference -->
+    <string-array name="languages">
+        <item>Russian</item>
+        <item>English</item>
+    </string-array>
+
+    <string-array name="languages_values">
+        <item>ru</item>
+        <item>en</item>
+    </string-array>
+
+    <string-array name="toolbar_title_food_category_name">
+        <item>Burgers</item>
+        <item>Coffee</item>
+        <item>Desserts</item>
+        <item>Kebab</item>
+        <item>Drinks</item>
+        <item>French fries</item>
+        <item>Hot dogs</item>
+        <item>Pizza</item>
+        <item>Sandwiches</item>
+        <item>Soup</item>
+        <item>Sushi</item>
+        <item>Tea</item>
+    </string-array>
+
+    <string-array name="toolbar_title_food_section_name">
+        <item>Vegan</item>
+        <item>Spicy</item>
+        <item>Pork</item>
+        <item>Fastfood</item>
+        <item>Drinks</item>
+        <item>Desserts</item>
+        <item>Chicken</item>
+        <item>Beef</item>
+    </string-array>
+
+</resources>

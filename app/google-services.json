@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "737753600596",
+    "firebase_url": "https://litefood-c3c66-default-rtdb.firebaseio.com",
+    "project_id": "litefood-c3c66",
+    "storage_bucket": "litefood-c3c66.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:737753600596:android:d4a2364c5c6e06e96593c1",
+        "android_client_info": {
+          "package_name": "com.diplomaproject.litefood"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyArpf9OOcTKi5GyjuTEyuGsFJGmlWfZ29E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

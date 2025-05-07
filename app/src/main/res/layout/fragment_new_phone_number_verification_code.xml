@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragment_input_verification_code"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragments.NewPhoneNumberVerificationCodeFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/imageView5"
+            android:layout_width="wrap_content"
+            android:layout_height="200dp"
+            android:layout_marginStart="105dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="106dp"
+            android:src="@drawable/ver_code_new_phone_number"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_label_verification_code"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="176dp"
+            android:layout_marginEnd="177dp"
+            android:text="Код из СМС"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView5" />
+
+        <LinearLayout
+            android:id="@+id/layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_label_verification_code">
+
+            <EditText
+                android:id="@+id/et_verification_code"
+                android:layout_width="300dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="30dp"
+                android:background="@drawable/edit_text_new_phone_number_verification_code"
+                android:inputType="text|number"
+                android:maxLength="16"
+                android:textAlignment="center"
+                android:textSize="20sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.498"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_label_verification_code" />
+
+            <TextView
+                android:id="@+id/tv_invalid_verification_code"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="Неверный код"
+                android:textColor="@color/colorPrimary"
+                android:visibility="gone"
+                tools:layout_editor_absoluteX="-40dp"
+                tools:layout_editor_absoluteY="51dp" />
+
+            <Button
+                android:id="@+id/btn_confirm"
+                android:layout_width="300dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="10dp"
+                android:text="Подтвердить"
+                android:textSize="20sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.495"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/layout" />
+
+            <TextView
+                android:id="@+id/tv_send_verification_code_again"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:enabled="false"
+                android:layout_marginTop="10dp"
+                android:textColor="@color/semi_transparent_black"
+                android:textSize="14sp"
+                android:text="dfdfdfdfdf"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/layout" />
+
+            <TextView
+                android:id="@+id/tv_is_invalid_phone_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="@string/is_invalid_phone_number"
+                android:textColor="@color/golden_yellow"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_send_verification_code_again" />
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</FrameLayout>

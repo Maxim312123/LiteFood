@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/registration"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background='@drawable/bg_activity'
+    tools:ignore="MissingClass">
+
+    <ImageView
+        android:id="@+id/iv_login_picture"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        app:srcCompat="@drawable/user_07b" />
+
+    <LinearLayout
+        android:id="@+id/phoneNumber_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="42dp"
+        android:layout_marginTop="60dp"
+        android:layout_marginEnd="36dp"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/iv_login_picture">
+
+        <EditText
+            android:id="@+id/ed_phone_number"
+            android:layout_width="300dp"
+            android:layout_height="50dp"
+            android:autofillHints="Пароль"
+            android:background="@drawable/edit_text_background"
+            android:drawableStart="@drawable/telephone"
+            android:drawablePadding="10dp"
+            android:elevation="5dp"
+            android:ems="10"
+            android:inputType="phone"
+            android:maxLength="19"
+            android:padding="15dp"
+            android:paddingStart="15dp"
+            android:text="+375 ("
+            android:textColor="@color/white"
+            android:textColorHint="@color/semi_transparent_white"
+            android:textSize="17sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.628"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:ignore="MissingClass,TextFields"
+            tools:layout_editor_absoluteY="507dp" />
+
+        <TextView
+            android:id="@+id/tv_error"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="0dp"
+            android:textColor="@color/yellow"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_send_sms"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="212dp"
+        android:background="@drawable/shape_btn_rounded"
+        android:foreground="@drawable/ripple_color"
+        android:text="Далее"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/phoneNumber_layout"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/tv_phone_number_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:fontFamily="@font/roboto_regular"
+        android:text="Введите номер телефона"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/iv_login_picture" />
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_marginStart="1dp"
+        android:layout_marginEnd="1dp"
+        android:backgroundTint="@color/colorPrimary"
+        android:elevation="10dp"
+        android:minHeight="?attr/actionBarSize"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"></androidx.appcompat.widget.Toolbar>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

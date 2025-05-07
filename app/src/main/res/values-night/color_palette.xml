@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <color name="colorPrimary">#AC0000</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="semi_transparent_white">#80FFFFFF</color>
+    <color name="pressed_text_view">#424141</color>
+    <color name="status_bar">@color/colorPrimary</color>
+    <color name="yellow">#F6DB07</color>
+    <color name="semi_yellow">#80FAEE0F</color>
+    <color name="semi_transparent_black">#80FFFFFF</color>
+    <color name="transparent">#00FFFFFF</color>
+    <color name="error_color">#F6DB07</color>
+    <color name="golden_yellow">#FFC300</color>
+    <color name="navigation_view_header_color">@color/colorPrimary</color>
+    <color name="settings_activity_toolbar">#4D575757</color>
+    <color name="product_cardview">#80000000</color>
+    <color name="text_view_color">#FFFFFFFF</color>
+    <color name="edit_text_color">#CCFFFFFF</color>
+    <color name="btn_disable_text_color">#FFFFFFFF</color>
+    <color name="food_category_background_label_color">#90E94545</color>
+</resources>

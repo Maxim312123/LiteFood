@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="2dp"
+    tools:showIn="@layout/fragment_product">
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/productCardView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="5dp"
+        app:cardCornerRadius="20dp"
+        app:cardElevation="4dp"
+        android:foreground="?attr/selectableItemBackground"
+        android:clickable="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/favorite"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:padding="1dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:src="@drawable/ic_not_added_favorite"/>
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:id="@+id/drink_image"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_marginTop="0dp"
+                    android:scaleType="fitCenter"
+                    tools:src="@drawable/cola" />
+                <ProgressBar
+                    android:id="@+id/progressBar"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_gravity="center"
+                    android:visibility="visible" />
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_marginStart="10dp"
+                android:lineSpacingExtra="3dp"
+                tools:text="Кока-кола 0.33 мл" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp">
+
+                <TextView
+                    android:id="@+id/price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="8dp"
+                    android:textStyle="bold"
+                    tools:text="1.99 руб" />
+
+                <ImageButton
+                    android:id="@+id/decrease_count"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="5dp"
+                    android:background="@drawable/selector_view"
+                    android:padding="5dp"
+                    android:src="@drawable/ic_minus" />
+
+                <EditText
+                    android:id="@+id/counter"
+                    android:layout_width="40dp"
+                    android:layout_height="25dp"
+                    android:layout_gravity="center|start"
+                    android:background="@drawable/bg_item_counter"
+                    android:focusableInTouchMode="false"
+                    android:maxLength="99"
+                    android:text="1"
+                    android:textAlignment="center" />
+
+                <ImageButton
+                    android:id="@+id/increase_count"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:padding="5dp"
+                    android:background="@drawable/selector_view"
+                    android:layout_gravity="center|start"
+                    android:src="@drawable/ic_plus" />
+            </LinearLayout>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/add_to_basket"
+                android:layout_width="150dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:text="@string/add_button" />
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+</androidx.constraintlayout.widget.ConstraintLayout>

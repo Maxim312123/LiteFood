@@ -1,0 +1,26 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory app:title="@string/general_header">
+
+        <ListPreference
+            android:dialogTitle="@string/list_preference_dialog_title"
+            app:defaultValue="ru"
+            app:entries="@array/languages"
+            app:entryValues="@array/languages_values"
+            app:key="list"
+            app:title="@string/list_preference_title"
+            app:useSimpleSummaryProvider="true" />
+
+        <ListPreference
+            android:dialogTitle="Выберите тему"
+            app:defaultValue="Светлая"
+            app:entries="@array/themes"
+            app:entryValues="@array/themes_values"
+            app:key="theme"
+            app:title="Цветовая тема"
+            app:useSimpleSummaryProvider="true" />
+    </PreferenceCategory>
+
+
+</PreferenceScreen>

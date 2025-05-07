@@ -1,0 +1,54 @@
+<resources>
+    <!-- Base application theme. -->
+    <style name="Base.Theme.LiteFood" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="android:colorPrimary">#AC0000</item>
+        <item name="android:colorPrimaryDark">@color/colorPrimary</item>
+        <item name="android:colorBackground">#3A3232</item>
+        <item name="android:windowBackground">#3A3232</item>
+
+        <item name="toolbarStyle">@style/Toolbar</item>
+        <item name="bottomNavigationStyle">@style/BottomNavigationView</item>
+        <item name="navigationViewStyle">@style/NavigationView</item>
+        <item name="buttonStyle">@style/GeneralButton</item>
+        <item name="colorSurface">#3A3232</item>
+        <item name="checkboxStyle">@style/Checkbox</item>
+
+        <item name="colorAccent">@color/white</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="materialCardViewStyle">@style/MaterialCardView</item>
+    </style>
+
+    <style name="Toolbar" parent="Widget.Material3.Toolbar">
+        <item name="colorPrimary">@color/colorPrimaryDark</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorPrimaryDark</item>
+        <item name="background">?android:attr/colorPrimary</item>
+        <item name="backgroundTint">@color/colorPrimaryDark</item>
+        <item name="colorOnPrimary">?android:attr/colorPrimary</item>
+    </style>
+
+    <style name="BottomNavigationView" parent="Widget.MaterialComponents.BottomNavigationView">
+        <item name="android:background">@color/colorPrimary</item>
+        <item name="itemIconTint">@color/bottom_nav_state_night</item>
+        <item name="itemTextColor">@color/bottom_nav_state_night</item>
+        <item name="labelVisibilityMode">labeled</item>
+        <item name="itemRippleColor">#33000000</item>
+        <item name="menu">@menu/bottom_navigation_bar</item>
+    </style>
+
+    <style name="NavigationView" parent="Widget.MaterialComponents.NavigationView">
+        <item name="android:background">#352B2B</item>
+        <item name="itemIconTint">@color/white</item>
+        <item name="itemTextColor">@color/white</item>
+    </style>
+
+    <style name="MaterialCardView" parent="Widget.Material3.CardView.Outlined">
+        <item name="android:backgroundTint">#3A3232</item>
+    </style>
+
+    <style name="Checkbox" parent="Widget.AppCompat.CompoundButton.CheckBox">
+        <item name="background">@color/colorPrimary</item>
+        <item name="backgroundColor">@color/colorPrimary</item>
+    </style>
+
+</resources>
