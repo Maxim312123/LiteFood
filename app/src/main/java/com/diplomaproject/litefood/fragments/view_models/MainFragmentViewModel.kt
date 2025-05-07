@@ -7,6 +7,7 @@ import com.diplomaproject.litefood.FirebaseService
 import com.diplomaproject.litefood.data.FoodSection
 import com.diplomaproject.litefood.data.HitSalesProduct
 import com.diplomaproject.litefood.data.Product
+import com.google.firebase.firestore.DocumentReference
 
 class MainFragmentViewModel : ViewModel() {
 
@@ -24,6 +25,12 @@ class MainFragmentViewModel : ViewModel() {
     private val _isNavigatedToFoodSectionProducts = MutableLiveData<Boolean>()
     val isNavigatedToFoodSectionProducts: LiveData<Boolean> get() = _isNavigatedToFoodSectionProducts
 
+    private val _selectedHitSalesProductPosition = MutableLiveData<Int>(-1)
+    val selectedHitSalesProductPosition: LiveData<Int> get() = _selectedHitSalesProductPosition
+
+    private val _hitSalesProduct = MutableLiveData<Product?>(null)
+    val hitSalesProduct: LiveData<Product?> get() = _hitSalesProduct
+
     suspend fun fetchFoodSections() {
         val foodSections = firestoreRepository.fetchFoodSections()
         _foodSections.value = foodSections
@@ -34,18 +41,38 @@ class MainFragmentViewModel : ViewModel() {
         _hitSalesProducts.value = hitSalesProducts
     }
 
-    fun onFoodSectionClick(position: Int) {
-        _selectedFoodSectionPosition.value = position
+    fun onFoodSectionClicked(flag: Int) {
+        _selectedFoodSectionPosition.value = flag
     }
 
 
-    suspend fun navigateToFoodSectionProducts(sectionName: String, onResult: (MutableList<Product>) -> Unit) {
-         val products= firestoreRepository.fetchFoodSectionProducts(sectionName)
+    suspend fun navigateToFoodSectionProducts(
+        sectionName: String,
+        onResult: (MutableList<Product>) -> Unit
+    ) {
+        val products = firestoreRepository.fetchFoodSectionProducts(sectionName)
         _isNavigatedToFoodSectionProducts.value = true
     }
 
     fun navigatedToFoodSectionProducts() {
         _isNavigatedToFoodSectionProducts.value = false
+    }
+
+    fun onHitSalesProductCLick(position: Int) {
+        _selectedHitSalesProductPosition.value = position
+    }
+
+    fun onHitSalesProductClicked(flag: Int) {
+        _selectedHitSalesProductPosition.value = flag
+    }
+
+    suspend fun fetchHitSalesProductData(productRef: DocumentReference){
+        val product = firestoreRepository.fetchHitSalesProductData(productRef)
+        _hitSalesProduct.value = product
+    }
+
+    fun onFetchedHitSalesProduct(){
+        _hitSalesProduct.value =null
     }
 
 }

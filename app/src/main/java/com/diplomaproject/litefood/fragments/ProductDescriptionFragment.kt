@@ -215,7 +215,7 @@ class ProductDescriptionFragment : Fragment(), MenuProvider {
         when (menuItem.itemId) {
             android.R.id.home -> {
                 parentFragmentManager.popBackStack(
-                    "ProductDescriptionFragment",
+                    null,
                     FragmentManager.POP_BACK_STACK_INCLUSIVE
                 )
                 return true

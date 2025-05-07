@@ -4,23 +4,24 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:foreground="?attr/selectableItemBackground"
     app:shapeAppearance="?attr/shapeAppearanceCornerExtraLarge">
 
     <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cardProduct"
         style="@style/Widget.Material3.CardView.Elevated"
-        android:backgroundTint="#EDB341"
         android:layout_width="150dp"
-        app:cardElevation="4dp"
         android:layout_height="150dp"
-        android:layout_margin="8dp">
+        android:layout_margin="8dp"
+        android:backgroundTint="#EDB341"
+        android:clickable="true"
+        android:foreground="?attr/selectableItemBackground"
+        app:cardElevation="4dp">
 
         <ImageView
             android:id="@+id/ivProduct"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_gravity="center"
-            android:clickable="true"
             tools:src="@drawable/hamburger" />
 
         <TextView
@@ -29,8 +30,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="top|center"
             android:layout_marginTop="5dp"
-            android:textStyle="bold"
             android:textColor="@color/black"
+            android:textStyle="bold"
             tools:text="Фишбургер" />
 
         <TextView
