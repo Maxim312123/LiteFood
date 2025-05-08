@@ -123,12 +123,12 @@ class MainFragment : Fragment(), MenuProvider {
             rvSalesLeaderProducts.adapter = salesLeaderProductAdapter
         }
 
-        viewModel.selectedHitSalesProductPosition.observe(viewLifecycleOwner) { position ->
+        viewModel.clickedSalesLeaderProductPosition.observe(viewLifecycleOwner) { position ->
             if (position != -1) {
                 val productRef = salesLeaderProductAdapter.getProduct(position).productRef
 
                 val job = viewLifecycleOwner.lifecycleScope.launch {
-                    viewModel.fetchHitSalesProductData(productRef)
+                    viewModel.fetchCarouselProductData(productRef)
                 }
 
                 completingCoroutines.add(job)
@@ -136,11 +136,11 @@ class MainFragment : Fragment(), MenuProvider {
                     removeCompletingCoroutine(job)
                 }
 
-                viewModel.onHitSalesProductClicked(-1)
+                viewModel.onSalesLeaderProductClicked(-1)
             }
         }
 
-        viewModel.hitSalesProduct.observe(viewLifecycleOwner) { product ->
+        viewModel.carouselProduct.observe(viewLifecycleOwner) { product ->
             if (product != null) {
                 parentFragmentManager.beginTransaction()
                     .replace(
@@ -149,7 +149,7 @@ class MainFragment : Fragment(), MenuProvider {
                     )
                     .addToBackStack(null)
                     .commit()
-                viewModel.onFetchedHitSalesProductData()
+                viewModel.onFetchedCarouselProductData()
             }
         }
 
@@ -158,6 +158,23 @@ class MainFragment : Fragment(), MenuProvider {
             vegetarianProductAdapter =
                 CarouselProductAdapter(requireActivity(), viewModel, vegetarianProducts)
             rvVegetarianProducts.adapter = vegetarianProductAdapter
+        }
+
+        viewModel.clickedVegetarianProductPosition.observe(viewLifecycleOwner) { position ->
+            if (position != -1) {
+                val productRef = vegetarianProductAdapter.getProduct(position).productRef
+
+                val job = viewLifecycleOwner.lifecycleScope.launch {
+                    viewModel.fetchCarouselProductData(productRef)
+                }
+
+                completingCoroutines.add(job)
+                job.invokeOnCompletion {
+                    removeCompletingCoroutine(job)
+                }
+
+                viewModel.onVegetarianProductClicked(-1)
+            }
         }
     }
 

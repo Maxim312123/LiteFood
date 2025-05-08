@@ -148,7 +148,7 @@ class FirestoreDatabaseRepository {
         }
     }
 
-    suspend fun fetchHitSalesProductData(documentReference: DocumentReference): Product? {
+    suspend fun fetchCarouselProductData(documentReference: DocumentReference): Product? {
         var product: Product? = null
         return coroutineScope {
             val result = documentReference.get().addOnCompleteListener { task ->

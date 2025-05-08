@@ -28,11 +28,14 @@ class MainFragmentViewModel : ViewModel() {
     private val _isNavigatedToFoodSectionProducts = MutableLiveData<Boolean>()
     val isNavigatedToFoodSectionProducts: LiveData<Boolean> get() = _isNavigatedToFoodSectionProducts
 
-    private val _selectedHitSalesProductPosition = MutableLiveData<Int>(-1)
-    val selectedHitSalesProductPosition: LiveData<Int> get() = _selectedHitSalesProductPosition
+    private val _clickedSalesLeaderProductPosition = MutableLiveData<Int>(-1)
+    val clickedSalesLeaderProductPosition: LiveData<Int> get() = _clickedSalesLeaderProductPosition
 
-    private val _hitSalesProduct = MutableLiveData<Product?>(null)
-    val hitSalesProduct: LiveData<Product?> get() = _hitSalesProduct
+    private val _clickedVegetarianProductPosition = MutableLiveData<Int>(-1)
+    val clickedVegetarianProductPosition: LiveData<Int> get() = _clickedVegetarianProductPosition
+
+    private val _carouselProduct = MutableLiveData<Product?>(null)
+    val carouselProduct: LiveData<Product?> get() = _carouselProduct
 
     suspend fun fetchFoodSections() {
         val foodSections = firestoreRepository.fetchFoodSections()
@@ -44,7 +47,7 @@ class MainFragmentViewModel : ViewModel() {
         _salesLeaderProducts.value = salesLeaderProducts
     }
 
-    suspend fun fetchVegetarianProducts(){
+    suspend fun fetchVegetarianProducts() {
         val vegetarianProducts = firestoreRepository.fetchVegetarianProducts()
         _vegetarianProducts.value = vegetarianProducts
     }
@@ -66,21 +69,29 @@ class MainFragmentViewModel : ViewModel() {
         _isNavigatedToFoodSectionProducts.value = false
     }
 
-    fun onHitSalesProductCLick(position: Int) {
-        _selectedHitSalesProductPosition.value = position
+    fun onSalesLeaderProductCLick(position: Int) {
+        _clickedSalesLeaderProductPosition.value = position
     }
 
-    fun onHitSalesProductClicked(flag: Int) {
-        _selectedHitSalesProductPosition.value = flag
+    fun onSalesLeaderProductClicked(flag: Int) {
+        _clickedSalesLeaderProductPosition.value = flag
     }
 
-    suspend fun fetchHitSalesProductData(productRef: DocumentReference) {
-        val product = firestoreRepository.fetchHitSalesProductData(productRef)
-        _hitSalesProduct.value = product
+    fun onVegetarianProductCLick(position: Int) {
+        _clickedVegetarianProductPosition.value = position
     }
 
-    fun onFetchedHitSalesProductData() {
-        _hitSalesProduct.value = null
+    fun onVegetarianProductClicked(flag: Int) {
+        _clickedVegetarianProductPosition.value = flag
+    }
+
+    suspend fun fetchCarouselProductData(productRef: DocumentReference) {
+        val product = firestoreRepository.fetchCarouselProductData(productRef)
+        _carouselProduct.value = product
+    }
+
+    fun onFetchedCarouselProductData() {
+        _carouselProduct.value = null
     }
 
 }

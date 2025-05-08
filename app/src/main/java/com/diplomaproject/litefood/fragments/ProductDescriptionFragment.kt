@@ -16,7 +16,6 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
@@ -119,7 +118,7 @@ class ProductDescriptionFragment : Fragment(), MenuProvider {
     private fun getStyledProductWeight(productWeight: Int): Spanned {
         when (product.type) {
             ProductType.COFFEE.productType, ProductType.DRINKS.productType,
-            ProductType.SOUP.productType -> {
+            ProductType.SOUPS.productType -> {
                 val volume = getString(R.string.productVolume, productWeight)
                 return Html.fromHtml(volume, Html.FROM_HTML_MODE_LEGACY)
             }
@@ -214,10 +213,7 @@ class ProductDescriptionFragment : Fragment(), MenuProvider {
     override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
         when (menuItem.itemId) {
             android.R.id.home -> {
-                parentFragmentManager.popBackStack(
-                    null,
-                    FragmentManager.POP_BACK_STACK_INCLUSIVE
-                )
+                parentFragmentManager.popBackStack()
                 return true
             }
         }

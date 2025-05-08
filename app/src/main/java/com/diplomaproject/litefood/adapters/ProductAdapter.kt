@@ -288,7 +288,7 @@ class ProductAdapter(
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun updateDrinks(drinks: MutableList<Product>) {
+    fun updateProducts(drinks: MutableList<Product>) {
         this.products = drinks
         notifyDataSetChanged()
     }

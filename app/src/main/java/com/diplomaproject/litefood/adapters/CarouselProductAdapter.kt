@@ -190,13 +190,13 @@ class CarouselProductAdapter(
         when (viewHolder) {
             is SalesLeaderViewHolder -> {
                 viewHolder.cardProduct.setOnClickListener {
-                    viewModel.onHitSalesProductCLick(position)
+                    viewModel.onSalesLeaderProductCLick(position)
                 }
             }
 
             is VegetarianProductViewHolder -> {
                 viewHolder.cardProduct.setOnClickListener {
-                    viewModel.onHitSalesProductCLick(position)
+                    viewModel.onVegetarianProductCLick(position)
                 }
             }
 

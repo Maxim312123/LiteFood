@@ -85,7 +85,7 @@ class ProductFragment : Fragment(), MenuProvider, ProductAdapter.OnProductCardVi
                 }
             }
 
-            productAdapter.updateDrinks(products)
+            productAdapter.updateProducts(products)
         }
         setupToolbar()
         requireActivity().addMenuProvider(this, viewLifecycleOwner)
@@ -138,7 +138,7 @@ class ProductFragment : Fragment(), MenuProvider, ProductAdapter.OnProductCardVi
                 R.id.fragment_container,
                 ProductDescriptionFragment.newInstance(clickedProduct)
             )
-            .addToBackStack("ProductDescriptionFragment")
+            .addToBackStack(null)
             .commit()
         val bottomNavigationView =
             (activity as MainActivity).findViewById<BottomNavigationView>(R.id.bottomNavigationView)
