@@ -13,7 +13,7 @@ import com.diplomaproject.litefood.data.Product
 import com.diplomaproject.litefood.databinding.ActivityFavoriteProductBinding
 import com.diplomaproject.litefood.fragments.EmptyFavoriteProductFragment
 import com.diplomaproject.litefood.fragments.FavoriteProductFragment
-import com.diplomaproject.litefood.managers.FirebaseRealtimeDatabaseRepository
+import com.diplomaproject.litefood.repository.FirebaseRealtimeDatabaseRepository
 
 class FavoriteProductActivity : AppCompatActivity(), MenuProvider {
     private val binding: ActivityFavoriteProductBinding by lazy {

@@ -5,15 +5,13 @@ import android.os.Parcelable
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 
-class HitSalesProduct(
-    val id: String,
-    val name: String,
-    val imagePath: String,
-    val pricePerUnit: Double,
-    val productRef: DocumentReference
-) : Parcelable {
-
-    var imageURL: String? = null
+class VegetarianCarouselProduct(
+    id: String,
+    name: String,
+    imagePath: String,
+    pricePerUnit: Double,
+    productRef: DocumentReference
+) : CarouselProduct(id, name, imagePath, pricePerUnit, productRef), Parcelable {
 
     constructor() : this("", "", "", 0.0, FirebaseFirestore.getInstance().document("dummy/path"))
 
@@ -35,12 +33,12 @@ class HitSalesProduct(
         parcel.writeString(productRef.path)
     }
 
-    companion object CREATOR : Parcelable.Creator<HitSalesProduct> {
-        override fun createFromParcel(parcel: Parcel): HitSalesProduct {
-            return HitSalesProduct(parcel)
+    companion object CREATOR : Parcelable.Creator<VegetarianCarouselProduct> {
+        override fun createFromParcel(parcel: Parcel): VegetarianCarouselProduct {
+            return VegetarianCarouselProduct(parcel)
         }
 
-        override fun newArray(size: Int): Array<HitSalesProduct?> {
+        override fun newArray(size: Int): Array<VegetarianCarouselProduct?> {
             return arrayOfNulls(size)
         }
     }

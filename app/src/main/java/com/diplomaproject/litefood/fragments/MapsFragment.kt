@@ -17,7 +17,7 @@ import com.diplomaproject.litefood.R
 import com.diplomaproject.litefood.activities.MainActivity
 import com.diplomaproject.litefood.data.Address
 import com.diplomaproject.litefood.databinding.FragmentMapsBinding
-import com.diplomaproject.litefood.managers.FirebaseRealtimeDatabaseRepository
+import com.diplomaproject.litefood.repository.FirebaseRealtimeDatabaseRepository
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback

@@ -29,7 +29,7 @@ import com.diplomaproject.litefood.data.Address
 import com.diplomaproject.litefood.data.CartProduct
 import com.diplomaproject.litefood.databinding.FragmentOrderRegistrationBinding
 import com.diplomaproject.litefood.fragments.view_models.OrderRegistrationFragmentViewModel
-import com.diplomaproject.litefood.managers.FirebaseRealtimeDatabaseRepository
+import com.diplomaproject.litefood.repository.FirebaseRealtimeDatabaseRepository
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.chip.Chip

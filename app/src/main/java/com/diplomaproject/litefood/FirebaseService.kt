@@ -1,6 +1,6 @@
 package com.diplomaproject.litefood
 
-import com.diplomaproject.litefood.managers.FirestoreDatabaseRepository
+import com.diplomaproject.litefood.repository.FirestoreDatabaseRepository
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.FirebaseDatabase

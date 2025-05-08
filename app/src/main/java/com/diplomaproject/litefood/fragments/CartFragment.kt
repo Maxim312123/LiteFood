@@ -25,8 +25,8 @@ import com.diplomaproject.litefood.data.CartProduct
 import com.diplomaproject.litefood.data.User
 import com.diplomaproject.litefood.databinding.FragmentBasketBinding
 import com.diplomaproject.litefood.fragments.view_models.CartViewModel
-import com.diplomaproject.litefood.managers.FirebaseRealtimeDatabaseRepository
-import com.diplomaproject.litefood.managers.FirebaseRealtimeDatabaseRepository.ShoppingBasketDataCallback
+import com.diplomaproject.litefood.repository.FirebaseRealtimeDatabaseRepository
+import com.diplomaproject.litefood.repository.FirebaseRealtimeDatabaseRepository.ShoppingBasketDataCallback
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.card.MaterialCardView

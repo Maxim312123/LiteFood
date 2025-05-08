@@ -2,14 +2,12 @@ package com.diplomaproject.litefood.fragments
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.core.view.MenuProvider
@@ -21,12 +19,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.diplomaproject.litefood.FirebaseService
 import com.diplomaproject.litefood.FoodSections
 import com.diplomaproject.litefood.R
+import com.diplomaproject.litefood.adapters.CarouselProductAdapter
 import com.diplomaproject.litefood.adapters.FoodSectionAdapter
-import com.diplomaproject.litefood.adapters.HitSalesProductsAdapter
 import com.diplomaproject.litefood.data.Product
 import com.diplomaproject.litefood.databinding.FragmentMainBinding
 import com.diplomaproject.litefood.fragments.view_models.MainFragmentViewModel
-import com.diplomaproject.litefood.managers.FirestoreDatabaseRepository
+import com.diplomaproject.litefood.repository.FirestoreDatabaseRepository
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.carousel.CarouselLayoutManager
 import com.google.android.material.carousel.CarouselSnapHelper
@@ -39,9 +37,11 @@ class MainFragment : Fragment(), MenuProvider {
     private var toolbar: MaterialToolbar? = null
 
     private lateinit var rvFoodSections: RecyclerView
-    private lateinit var rvHitSales: RecyclerView
+    private lateinit var rvSalesLeaderProducts: RecyclerView
+    private lateinit var rvVegetarianProducts: RecyclerView
     private lateinit var foodSectionAdapter: FoodSectionAdapter
-    private lateinit var hitSalesProductAdapter: HitSalesProductsAdapter
+    private lateinit var salesLeaderProductAdapter: CarouselProductAdapter
+    private lateinit var vegetarianProductAdapter: CarouselProductAdapter
 
     private val firestoreDatabaseRepository: FirestoreDatabaseRepository by lazy {
         FirebaseService.firestoreDatabaseRepository
@@ -58,18 +58,27 @@ class MainFragment : Fragment(), MenuProvider {
             viewModel.fetchFoodSections()
         }
 
-        val fetchHitSalesProductsJob = lifecycleScope.launch {
-            viewModel.fetchHitSalesProducts()
+        val fetchSalesLeaderProductsJob = lifecycleScope.launch {
+            viewModel.fetchSalesLeaderProducts()
+        }
+
+        val fetchVegetarianProductsJob = lifecycleScope.launch {
+            viewModel.fetchVegetarianProducts()
         }
 
         completingCoroutines.add(fetchFoodSectionsJob)
-        completingCoroutines.add(fetchHitSalesProductsJob)
+        completingCoroutines.add(fetchSalesLeaderProductsJob)
+        completingCoroutines.add(fetchVegetarianProductsJob)
 
         fetchFoodSectionsJob.invokeOnCompletion {
             removeCompletingCoroutine(fetchFoodSectionsJob)
         }
-        fetchHitSalesProductsJob.invokeOnCompletion {
-            removeCompletingCoroutine(fetchHitSalesProductsJob)
+        fetchSalesLeaderProductsJob.invokeOnCompletion {
+            removeCompletingCoroutine(fetchSalesLeaderProductsJob)
+        }
+
+        fetchVegetarianProductsJob.invokeOnCompletion {
+            removeCompletingCoroutine(fetchSalesLeaderProductsJob)
         }
 
     }
@@ -80,7 +89,6 @@ class MainFragment : Fragment(), MenuProvider {
     ): View? {
         binding = FragmentMainBinding.inflate(inflater, container, false)
         requireActivity().addMenuProvider(this, viewLifecycleOwner)
-        Log.d("MainFragment", "onCreateView()")
         return binding.root
     }
 
@@ -109,52 +117,30 @@ class MainFragment : Fragment(), MenuProvider {
             }
         }
 
-        viewModel.hitSalesProducts.observe(viewLifecycleOwner) { hitSalesProducts ->
-            hitSalesProductAdapter =
-                HitSalesProductsAdapter(requireActivity(), viewModel, hitSalesProducts)
-            rvHitSales.adapter = hitSalesProductAdapter
+        viewModel.salesLeaderProducts.observe(viewLifecycleOwner) { salesLeaderProducts ->
+            salesLeaderProductAdapter =
+                CarouselProductAdapter(requireActivity(), viewModel, salesLeaderProducts)
+            rvSalesLeaderProducts.adapter = salesLeaderProductAdapter
         }
 
-        viewModel.selectedHitSalesProductPosition.observe(viewLifecycleOwner) { position ->
+        viewModel.clickedSalesLeaderProductPosition.observe(viewLifecycleOwner) { position ->
             if (position != -1) {
-//                val productRef = hitSalesProductAdapter.getProduct(position).productRef
-//                val job = viewLifecycleOwner.lifecycleScope.launch {
-//                    viewModel.fetchHitSalesProductData(productRef)
-//                }
-//
-//                completingCoroutines.add(job)
-//                job.invokeOnCompletion {
-//                    removeCompletingCoroutine(job)
-//                }
+                val productRef = salesLeaderProductAdapter.getProduct(position).productRef
 
-                fetchProductData(position)
-                viewModel.onHitSalesProductClicked(-1)
+                val job = viewLifecycleOwner.lifecycleScope.launch {
+                    viewModel.fetchCarouselProductData(productRef)
+                }
+
+                completingCoroutines.add(job)
+                job.invokeOnCompletion {
+                    removeCompletingCoroutine(job)
+                }
+
+                viewModel.onSalesLeaderProductClicked(-1)
             }
         }
 
-//        viewModel.hitSalesProduct.observe(viewLifecycleOwner) { product ->
-//            if (product != null) {
-//                parentFragmentManager.beginTransaction()
-//                    .replace(
-//                        R.id.fragment_container,
-//                        ProductDescriptionFragment.newInstance(product)
-//                    )
-//                    .addToBackStack(null)
-//                    .commit()
-//                viewModel.onFetchedHitSalesProduct()
-//            }
-//        }
-
-    }
-
-    private fun fetchProductData(position: Int) {
-
-        val productRef = hitSalesProductAdapter.getProduct(position).productRef
-
-
-        val job = viewLifecycleOwner.lifecycleScope.launch {
-            val product = firestoreDatabaseRepository.fetchHitSalesProductData(productRef)
-
+        viewModel.carouselProduct.observe(viewLifecycleOwner) { product ->
             if (product != null) {
                 parentFragmentManager.beginTransaction()
                     .replace(
@@ -163,15 +149,33 @@ class MainFragment : Fragment(), MenuProvider {
                     )
                     .addToBackStack(null)
                     .commit()
-                viewModel.onFetchedHitSalesProduct()
+                viewModel.onFetchedCarouselProductData()
             }
         }
 
-        completingCoroutines.add(job)
-        job.invokeOnCompletion {
-            removeCompletingCoroutine(job)
+
+        viewModel.vegetarianProducts.observe(viewLifecycleOwner) { vegetarianProducts ->
+            vegetarianProductAdapter =
+                CarouselProductAdapter(requireActivity(), viewModel, vegetarianProducts)
+            rvVegetarianProducts.adapter = vegetarianProductAdapter
         }
 
+        viewModel.clickedVegetarianProductPosition.observe(viewLifecycleOwner) { position ->
+            if (position != -1) {
+                val productRef = vegetarianProductAdapter.getProduct(position).productRef
+
+                val job = viewLifecycleOwner.lifecycleScope.launch {
+                    viewModel.fetchCarouselProductData(productRef)
+                }
+
+                completingCoroutines.add(job)
+                job.invokeOnCompletion {
+                    removeCompletingCoroutine(job)
+                }
+
+                viewModel.onVegetarianProductClicked(-1)
+            }
+        }
     }
 
     private fun setupToolbar() {
@@ -182,11 +186,13 @@ class MainFragment : Fragment(), MenuProvider {
     @SuppressLint("RestrictedApi", "WrongConstant")
     private fun initViews() {
         rvFoodSections = binding.rvFoodSections!!
+        rvVegetarianProducts = binding.rvVegetarianProducts!!
 
-        rvHitSales = binding.rvHitSales!!
-        rvHitSales.setLayoutManager(CarouselLayoutManager())
+        rvSalesLeaderProducts = binding.rvHitSales!!
+        rvSalesLeaderProducts.setLayoutManager(CarouselLayoutManager())
         val carouselSnapHelper = CarouselSnapHelper()
-        carouselSnapHelper.attachToRecyclerView(rvHitSales)
+        carouselSnapHelper.attachToRecyclerView(rvSalesLeaderProducts)
+
     }
 
     override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {

@@ -18,7 +18,7 @@ import com.diplomaproject.litefood.activities.MainActivity
 import com.diplomaproject.litefood.adapters.ProductAdapter
 import com.diplomaproject.litefood.data.Product
 import com.diplomaproject.litefood.databinding.FragmentProductBinding
-import com.diplomaproject.litefood.managers.FirebaseRealtimeDatabaseRepository
+import com.diplomaproject.litefood.repository.FirebaseRealtimeDatabaseRepository
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.coroutines.launch
@@ -85,7 +85,7 @@ class ProductFragment : Fragment(), MenuProvider, ProductAdapter.OnProductCardVi
                 }
             }
 
-            productAdapter.updateDrinks(products)
+            productAdapter.updateProducts(products)
         }
         setupToolbar()
         requireActivity().addMenuProvider(this, viewLifecycleOwner)
@@ -138,7 +138,7 @@ class ProductFragment : Fragment(), MenuProvider, ProductAdapter.OnProductCardVi
                 R.id.fragment_container,
                 ProductDescriptionFragment.newInstance(clickedProduct)
             )
-            .addToBackStack("ProductDescriptionFragment")
+            .addToBackStack(null)
             .commit()
         val bottomNavigationView =
             (activity as MainActivity).findViewById<BottomNavigationView>(R.id.bottomNavigationView)

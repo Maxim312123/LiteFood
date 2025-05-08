@@ -1,7 +1,8 @@
-package com.diplomaproject.litefood.managers
+package com.diplomaproject.litefood.repository
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
+import com.diplomaproject.litefood.FirebaseAuthService
 import com.diplomaproject.litefood.data.Address
 import com.diplomaproject.litefood.data.BaseProduct
 import com.diplomaproject.litefood.data.CartProduct

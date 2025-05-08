@@ -21,7 +21,7 @@ import com.diplomaproject.litefood.R
 import com.diplomaproject.litefood.data.CartProduct
 import com.diplomaproject.litefood.data.Product
 import com.diplomaproject.litefood.databinding.ItemProductBinding
-import com.diplomaproject.litefood.managers.FirebaseRealtimeDatabaseRepository
+import com.diplomaproject.litefood.repository.FirebaseRealtimeDatabaseRepository
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import java.text.DecimalFormat
@@ -288,7 +288,7 @@ class ProductAdapter(
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun updateDrinks(drinks: MutableList<Product>) {
+    fun updateProducts(drinks: MutableList<Product>) {
         this.products = drinks
         notifyDataSetChanged()
     }
