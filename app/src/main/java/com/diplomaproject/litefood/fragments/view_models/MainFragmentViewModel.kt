@@ -4,8 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.diplomaproject.litefood.FirebaseService
+import com.diplomaproject.litefood.data.CarouselProduct
 import com.diplomaproject.litefood.data.FoodSection
-import com.diplomaproject.litefood.data.HitSalesProduct
 import com.diplomaproject.litefood.data.Product
 import com.google.firebase.firestore.DocumentReference
 
@@ -16,8 +16,11 @@ class MainFragmentViewModel : ViewModel() {
     private val _foodSections = MutableLiveData<MutableList<FoodSection>>()
     val foodSections: LiveData<MutableList<FoodSection>> get() = _foodSections
 
-    private val _hitSalesProducts = MutableLiveData<MutableList<HitSalesProduct>>()
-    val hitSalesProducts: LiveData<MutableList<HitSalesProduct>> get() = _hitSalesProducts
+    private val _salesLeaderProducts = MutableLiveData<MutableList<out CarouselProduct>>()
+    val salesLeaderProducts: LiveData<MutableList<out CarouselProduct>> get() = _salesLeaderProducts
+
+    private val _vegetarianProducts = MutableLiveData<MutableList<out CarouselProduct>>()
+    val vegetarianProducts: LiveData<MutableList<out CarouselProduct>> get() = _vegetarianProducts
 
     private val _selectedFoodSectionPosition = MutableLiveData<Int>(-1)
     val selectedFoodSectionPosition: LiveData<Int> get() = _selectedFoodSectionPosition
@@ -36,9 +39,14 @@ class MainFragmentViewModel : ViewModel() {
         _foodSections.value = foodSections
     }
 
-    suspend fun fetchHitSalesProducts() {
-        val hitSalesProducts = firestoreRepository.fetchHitSalesProducts()
-        _hitSalesProducts.value = hitSalesProducts
+    suspend fun fetchSalesLeaderProducts() {
+        val salesLeaderProducts = firestoreRepository.fetchSalesLeaderProducts()
+        _salesLeaderProducts.value = salesLeaderProducts
+    }
+
+    suspend fun fetchVegetarianProducts(){
+        val vegetarianProducts = firestoreRepository.fetchVegetarianProducts()
+        _vegetarianProducts.value = vegetarianProducts
     }
 
     fun onFoodSectionClicked(flag: Int) {
@@ -66,13 +74,13 @@ class MainFragmentViewModel : ViewModel() {
         _selectedHitSalesProductPosition.value = flag
     }
 
-    suspend fun fetchHitSalesProductData(productRef: DocumentReference){
+    suspend fun fetchHitSalesProductData(productRef: DocumentReference) {
         val product = firestoreRepository.fetchHitSalesProductData(productRef)
         _hitSalesProduct.value = product
     }
 
-    fun onFetchedHitSalesProduct(){
-        _hitSalesProduct.value =null
+    fun onFetchedHitSalesProductData() {
+        _hitSalesProduct.value = null
     }
 
 }

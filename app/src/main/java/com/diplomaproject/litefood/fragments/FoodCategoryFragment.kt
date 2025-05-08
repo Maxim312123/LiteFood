@@ -19,7 +19,7 @@ import com.diplomaproject.litefood.adapters.FoodCategoryAdapter
 import com.diplomaproject.litefood.data.FoodCategory
 import com.diplomaproject.litefood.data.Product
 import com.diplomaproject.litefood.databinding.FragmentFoodCategoriesBinding
-import com.diplomaproject.litefood.managers.FirestoreDatabaseRepository
+import com.diplomaproject.litefood.repository.FirestoreDatabaseRepository
 import com.google.android.material.appbar.MaterialToolbar
 
 

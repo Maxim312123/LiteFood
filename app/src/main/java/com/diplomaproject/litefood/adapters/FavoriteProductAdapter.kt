@@ -16,7 +16,7 @@ import com.diplomaproject.litefood.R
 import com.diplomaproject.litefood.data.CartProduct
 import com.diplomaproject.litefood.data.Product
 import com.diplomaproject.litefood.databinding.ItemFavoriteProductBinding
-import com.diplomaproject.litefood.managers.FirebaseRealtimeDatabaseRepository
+import com.diplomaproject.litefood.repository.FirebaseRealtimeDatabaseRepository
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 

@@ -12,7 +12,7 @@ import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import com.diplomaproject.litefood.R
 import com.diplomaproject.litefood.databinding.SettingsActivityBinding
-import com.diplomaproject.litefood.managers.FirebaseRealtimeDatabaseRepository
+import com.diplomaproject.litefood.repository.FirebaseRealtimeDatabaseRepository
 import com.google.android.material.appbar.MaterialToolbar
 import java.util.Locale
 

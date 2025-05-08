@@ -18,7 +18,7 @@ import com.diplomaproject.litefood.activities.MainActivity
 import com.diplomaproject.litefood.adapters.ProductAdapter
 import com.diplomaproject.litefood.data.Product
 import com.diplomaproject.litefood.databinding.FragmentProductBinding
-import com.diplomaproject.litefood.managers.FirebaseRealtimeDatabaseRepository
+import com.diplomaproject.litefood.repository.FirebaseRealtimeDatabaseRepository
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.coroutines.launch

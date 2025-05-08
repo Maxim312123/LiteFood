@@ -1,4 +1,4 @@
-package com.diplomaproject.litefood.managers
+package com.diplomaproject.litefood
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser

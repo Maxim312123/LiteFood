@@ -1,11 +1,12 @@
-package com.diplomaproject.litefood.managers
+package com.diplomaproject.litefood.repository
 
 import android.util.Log
 import com.diplomaproject.litefood.FirebaseService
 import com.diplomaproject.litefood.data.FoodCategory
 import com.diplomaproject.litefood.data.FoodSection
-import com.diplomaproject.litefood.data.HitSalesProduct
 import com.diplomaproject.litefood.data.Product
+import com.diplomaproject.litefood.data.SalesLeaderCarouselProduct
+import com.diplomaproject.litefood.data.VegetarianCarouselProduct
 import com.diplomaproject.litefood.utils.AppUtils
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.toObject
@@ -63,34 +64,6 @@ class FirestoreDatabaseRepository {
                 }
             }
     }
-
-//    fun fetchFoodSections(
-//        onResult: (foodSections: MutableList<FoodSection>?) -> Unit
-//    ) {
-//        val userLanguage = AppUtils.getCurrentUserLanguage()
-//
-//        val collectionRef = database.collection("food sections").document("language")
-//            .collection(userLanguage)
-//
-//        collectionRef.get().addOnCompleteListener { task ->
-//            if (task.isSuccessful) {
-//                val retrievedFoodSections = mutableListOf<FoodSection>()
-//                for (document in task.result) {
-//                    val foodSection =
-//                        FoodSection(
-//                            document.data["title"].toString(),
-//                            document.data["imageURL"].toString()
-//                        )
-//                    retrievedFoodSections.add(foodSection)
-//                }
-//                onResult(retrievedFoodSections)
-//                Log.d(TAG, "Success")
-//            } else {
-//                onResult(null)
-//                Log.d(TAG, "Error: ${task.exception?.message}")
-//            }
-//        }
-//    }
 
     suspend fun fetchFoodSections(): MutableList<FoodSection> {
         val userLanguage = AppUtils.getCurrentUserLanguage()
@@ -151,39 +124,18 @@ class FirestoreDatabaseRepository {
     }
 
 
-//    fun fetchHitSalesProducts(onResult: (MutableList<HitSalesProduct>) -> Unit) {
-//        val collectionRef = database.collection("hit sales products")
-//            .document("language").collection(AppUtils.getCurrentUserLanguage())
-//
-//        val products = mutableListOf<HitSalesProduct>()
-//
-//        collectionRef.get().addOnCompleteListener { task ->
-//            if (task.isSuccessful) {
-//                for (document in task.result) {
-//                    val product = document.toObject<HitSalesProduct>()
-//                    products.add(product)
-//                }
-//                onResult(products)
-//                Log.d(TAG, "Read hit sales products successfully")
-//            } else {
-//                Log.d(TAG, "Cannot read hit sales products: ${task.exception?.message}")
-//            }
-//        }
-//    }
-
-
-    suspend fun fetchHitSalesProducts(): MutableList<HitSalesProduct> {
+    suspend fun fetchSalesLeaderProducts(): MutableList<SalesLeaderCarouselProduct> {
         val collectionRef = database.collection("hit sales products")
             .document("language").collection(AppUtils.getCurrentUserLanguage())
 
-        val products = mutableListOf<HitSalesProduct>()
+        val products = mutableListOf<SalesLeaderCarouselProduct>()
 
         return coroutineScope {
             val res = collectionRef.get()
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         for (document in task.result) {
-                            val product = document.toObject<HitSalesProduct>()
+                            val product = document.toObject<SalesLeaderCarouselProduct>()
                             products.add(product)
                         }
                         Log.d(TAG, "Read hit sales products successfully")
@@ -206,6 +158,30 @@ class FirestoreDatabaseRepository {
             }
             result.await()
             product
+        }
+    }
+
+    suspend fun fetchVegetarianProducts(): MutableList<VegetarianCarouselProduct> {
+        val collectionRef = database.collection("for vegetarian")
+            .document("language").collection(AppUtils.getCurrentUserLanguage())
+
+        val products = mutableListOf<VegetarianCarouselProduct>()
+
+        return coroutineScope {
+            val res = collectionRef.get()
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        for (document in task.result) {
+                            val product = document.toObject<VegetarianCarouselProduct>()
+                            products.add(product)
+                        }
+                        Log.d(TAG, "Read hit sales products successfully")
+                    } else {
+                        Log.d(TAG, "Cannot read hit sales products: ${task.exception?.message}")
+                    }
+                }
+            res.await()
+            products
         }
     }
 }

@@ -6,7 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.diplomaproject.litefood.data.Address
 import com.diplomaproject.litefood.data.CreditCard
-import com.diplomaproject.litefood.managers.FirebaseRealtimeDatabaseRepository
+import com.diplomaproject.litefood.repository.FirebaseRealtimeDatabaseRepository
 
 class OrderRegistrationFragmentViewModel(application: Application) : AndroidViewModel(application) {
 

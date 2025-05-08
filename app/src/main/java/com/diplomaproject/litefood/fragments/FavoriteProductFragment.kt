@@ -15,7 +15,7 @@ import com.diplomaproject.litefood.adapters.FavoriteProductAdapter
 import com.diplomaproject.litefood.data.Product
 import com.diplomaproject.litefood.data.CartProduct
 import com.diplomaproject.litefood.databinding.FragmentFavoriteProductBinding
-import com.diplomaproject.litefood.managers.FirebaseRealtimeDatabaseRepository
+import com.diplomaproject.litefood.repository.FirebaseRealtimeDatabaseRepository
 
 
 class FavoriteProductFragment : Fragment(), MenuProvider,
