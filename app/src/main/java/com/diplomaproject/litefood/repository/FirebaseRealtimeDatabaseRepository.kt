@@ -7,6 +7,7 @@ import com.diplomaproject.litefood.data.Address
 import com.diplomaproject.litefood.data.BaseProduct
 import com.diplomaproject.litefood.data.CartProduct
 import com.diplomaproject.litefood.data.CreditCard
+import com.diplomaproject.litefood.data.FavoriteProductMainFragment
 import com.diplomaproject.litefood.data.Product
 import com.diplomaproject.litefood.data.User
 import com.google.firebase.database.DataSnapshot
@@ -376,5 +377,34 @@ class FirebaseRealtimeDatabaseRepository {
                 }
 
             })
+    }
+
+    fun fetchFavoriteProductsForMainFragment(onResult: (MutableList<FavoriteProductMainFragment>) -> Unit) {
+        userFavoriteProductsNodeRef.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    val products = mutableListOf<FavoriteProductMainFragment>()
+                    for (itemSnapshot in dataSnapshot.children) {
+                        val productId = itemSnapshot.child("id").getValue(String::class.java)
+                        val productImagePath =
+                            itemSnapshot.child("imageURL").getValue(String::class.java)
+
+                        if (productId != null && productImagePath != null) {
+                            val product = FavoriteProductMainFragment(productId, productImagePath)
+                            products.add(product)
+                        }
+                    }
+                    onResult(products)
+                }
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                Log.d(
+                    TAG,
+                    "Cannot fetch favorite products for MainFragment: ${databaseError.message}"
+                )
+            }
+
+        })
     }
 }

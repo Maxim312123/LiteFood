@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.diplomaproject.litefood.FirebaseService
 import com.diplomaproject.litefood.data.CarouselProduct
+import com.diplomaproject.litefood.data.FavoriteProductMainFragment
 import com.diplomaproject.litefood.data.FoodSection
 import com.diplomaproject.litefood.data.Product
 import com.google.firebase.firestore.DocumentReference
@@ -12,6 +13,7 @@ import com.google.firebase.firestore.DocumentReference
 class MainFragmentViewModel : ViewModel() {
 
     private val firestoreRepository = FirebaseService.firestoreDatabaseRepository
+    private val realtimeDatabaseRepository = FirebaseService.realtimeDatabaseRepository
 
     private val _foodSections = MutableLiveData<MutableList<FoodSection>>()
     val foodSections: LiveData<MutableList<FoodSection>> get() = _foodSections
@@ -39,6 +41,17 @@ class MainFragmentViewModel : ViewModel() {
 
     private val _carouselProduct = MutableLiveData<Product?>(null)
     val carouselProduct: LiveData<Product?> get() = _carouselProduct
+
+    private val _userFavoriteProducts = MutableLiveData<MutableList<FavoriteProductMainFragment>>()
+    val userFavoriteProducts: LiveData<MutableList<FavoriteProductMainFragment>> get() = _userFavoriteProducts
+
+    private val _isFavoriteProductsRecyclerViewVisible = MutableLiveData(false)
+    val isFavoriteProductsRecyclerViewVisible: LiveData<Boolean> =
+        _isFavoriteProductsRecyclerViewVisible
+
+    private val _isFavoriteProductsTitleVisible = MutableLiveData(false)
+    val isFavoriteProductsTitleVisible: LiveData<Boolean> =
+        _isFavoriteProductsTitleVisible
 
     suspend fun fetchFoodSections() {
         val foodSections = firestoreRepository.fetchFoodSections()
@@ -97,5 +110,19 @@ class MainFragmentViewModel : ViewModel() {
         _carouselProduct.value = null
     }
 
+
+    fun fetchFavoriteProducts() {
+        realtimeDatabaseRepository.fetchFavoriteProductsForMainFragment { products ->
+            _userFavoriteProducts.value = products
+        }
+    }
+
+    fun toggleFavoriteProductsRecyclerViewVisibility(isVisible: Boolean) {
+        _isFavoriteProductsRecyclerViewVisible.value = isVisible
+    }
+
+    fun toggleFavoriteProductsTitleVisibility(isVisible: Boolean) {
+        _isFavoriteProductsTitleVisible.value = isVisible
+    }
 
 }

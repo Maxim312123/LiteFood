@@ -73,5 +73,8 @@
     <string name="terms_of_use_and_policy">I agree to our Terms of Use and Privacy Policy</string>
     <string name="order">Order</string>
     <string name="title_sections">Sections</string>
+    <string name="title_hit_sales">Sales leader</string>
     <string name="title_for_vegetarians">For vegetarians</string>
+    <string name="title_spicy_products">Spicy</string>
+    <string name="title_favorite_products">Favorite</string>
 </resources>

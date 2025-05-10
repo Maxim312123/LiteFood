@@ -145,4 +145,6 @@
     <string name="title_sections">Разделы</string>
     <string name="title_hit_sales">Хит продаж</string>
     <string name="title_for_vegetarians">Для вегетарианцев</string>
+    <string name="title_spicy_products">Острое</string>
+    <string name="title_favorite_products">Избранное</string>
 </resources>

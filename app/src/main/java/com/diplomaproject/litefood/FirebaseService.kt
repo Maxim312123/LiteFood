@@ -1,5 +1,6 @@
 package com.diplomaproject.litefood
 
+import com.diplomaproject.litefood.repository.FirebaseRealtimeDatabaseRepository
 import com.diplomaproject.litefood.repository.FirestoreDatabaseRepository
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -24,6 +25,10 @@ object FirebaseService {
 
     val firestoreDatabaseRepository: FirestoreDatabaseRepository by lazy {
         FirestoreDatabaseRepository()
+    }
+
+    val realtimeDatabaseRepository: FirebaseRealtimeDatabaseRepository by lazy {
+        FirebaseRealtimeDatabaseRepository()
     }
 
 

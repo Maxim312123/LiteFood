@@ -20,6 +20,7 @@ import com.diplomaproject.litefood.FirebaseService
 import com.diplomaproject.litefood.FoodSections
 import com.diplomaproject.litefood.R
 import com.diplomaproject.litefood.adapters.CarouselProductAdapter
+import com.diplomaproject.litefood.adapters.FavoriteProductMainFragmentAdapter
 import com.diplomaproject.litefood.adapters.FoodSectionAdapter
 import com.diplomaproject.litefood.data.Product
 import com.diplomaproject.litefood.databinding.FragmentMainBinding
@@ -39,10 +40,12 @@ class MainFragment : Fragment(), MenuProvider {
     private lateinit var rvSalesLeaderProducts: RecyclerView
     private lateinit var rvVegetarianProducts: RecyclerView
     private lateinit var rvSpicyProducts: RecyclerView
+    private lateinit var rvFavoriteProducts: RecyclerView
     private lateinit var foodSectionAdapter: FoodSectionAdapter
     private lateinit var salesLeaderCarouselProductAdapter: CarouselProductAdapter
     private lateinit var vegetarianCarouselProductAdapter: CarouselProductAdapter
     private lateinit var spicyCarouselProductAdapter: CarouselProductAdapter
+    private lateinit var userFavoriteProductAdapter: FavoriteProductMainFragmentAdapter
 
     private val firestoreDatabaseRepository: FirestoreDatabaseRepository by lazy {
         FirebaseService.firestoreDatabaseRepository
@@ -90,6 +93,8 @@ class MainFragment : Fragment(), MenuProvider {
         fetchSpicyCarouselProductsJob.invokeOnCompletion {
             removeCompletingCoroutine(fetchSpicyCarouselProductsJob)
         }
+
+        viewModel.fetchFavoriteProducts()
     }
 
     override fun onCreateView(
@@ -208,6 +213,28 @@ class MainFragment : Fragment(), MenuProvider {
                 CarouselProductAdapter(viewModel, spicyProducts)
             rvSpicyProducts.adapter = spicyCarouselProductAdapter
         }
+
+        viewModel.userFavoriteProducts.observe(viewLifecycleOwner) { products ->
+            if (products != null && products.isNotEmpty()) {
+                userFavoriteProductAdapter = FavoriteProductMainFragmentAdapter(products)
+                rvFavoriteProducts.adapter = userFavoriteProductAdapter
+                viewModel.toggleFavoriteProductsRecyclerViewVisibility(true)
+                viewModel.toggleFavoriteProductsTitleVisibility(true)
+            } else {
+                userFavoriteProductAdapter = FavoriteProductMainFragmentAdapter(mutableListOf())
+                viewModel.toggleFavoriteProductsRecyclerViewVisibility(false)
+                viewModel.toggleFavoriteProductsTitleVisibility(false)
+            }
+        }
+
+        viewModel.isFavoriteProductsRecyclerViewVisible.observe(viewLifecycleOwner) { isVisible ->
+            binding.rvFavoriteProducts?.visibility = if (isVisible) View.VISIBLE else View.GONE
+        }
+
+        viewModel.isFavoriteProductsTitleVisible.observe(viewLifecycleOwner) { isVisible ->
+            binding.tvFavoriteProducts?.visibility = if (isVisible) View.VISIBLE else View.GONE
+        }
+
     }
 
     private fun setupToolbar() {
@@ -222,6 +249,7 @@ class MainFragment : Fragment(), MenuProvider {
         rvSalesLeaderProducts = binding.rvHitSales!!
         rvVegetarianProducts = binding.rvVegetarianProducts!!
         rvSpicyProducts = binding.rvSpicyProducts!!
+        rvFavoriteProducts = binding.rvFavoriteProducts!!
 
         val carouselSnapHelper = CarouselSnapHelper()
         carouselSnapHelper.attachToRecyclerView(rvSalesLeaderProducts)
