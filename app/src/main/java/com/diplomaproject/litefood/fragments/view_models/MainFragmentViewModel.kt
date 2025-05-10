@@ -22,17 +22,20 @@ class MainFragmentViewModel : ViewModel() {
     private val _vegetarianProducts = MutableLiveData<MutableList<out CarouselProduct>>()
     val vegetarianProducts: LiveData<MutableList<out CarouselProduct>> get() = _vegetarianProducts
 
-    private val _selectedFoodSectionPosition = MutableLiveData<Int>(-1)
+    private val _spicyProducts = MutableLiveData<MutableList<out CarouselProduct>>()
+    val spicyProducts: LiveData<MutableList<out CarouselProduct>> get() = _spicyProducts
+
+    private val _selectedFoodSectionPosition = MutableLiveData(-1)
     val selectedFoodSectionPosition: LiveData<Int> get() = _selectedFoodSectionPosition
 
-    private val _isNavigatedToFoodSectionProducts = MutableLiveData<Boolean>()
-    val isNavigatedToFoodSectionProducts: LiveData<Boolean> get() = _isNavigatedToFoodSectionProducts
-
-    private val _clickedSalesLeaderProductPosition = MutableLiveData<Int>(-1)
+    private val _clickedSalesLeaderProductPosition = MutableLiveData(-1)
     val clickedSalesLeaderProductPosition: LiveData<Int> get() = _clickedSalesLeaderProductPosition
 
-    private val _clickedVegetarianProductPosition = MutableLiveData<Int>(-1)
+    private val _clickedVegetarianProductPosition = MutableLiveData(-1)
     val clickedVegetarianProductPosition: LiveData<Int> get() = _clickedVegetarianProductPosition
+
+    private val _clickedSpicyProductPosition = MutableLiveData(-1)
+    val clickedSpicyProductPosition: LiveData<Int> get() = _clickedSpicyProductPosition
 
     private val _carouselProduct = MutableLiveData<Product?>(null)
     val carouselProduct: LiveData<Product?> get() = _carouselProduct
@@ -42,31 +45,23 @@ class MainFragmentViewModel : ViewModel() {
         _foodSections.value = foodSections
     }
 
-    suspend fun fetchSalesLeaderProducts() {
-        val salesLeaderProducts = firestoreRepository.fetchSalesLeaderProducts()
+    suspend fun fetchSalesLeaderCarouselProducts() {
+        val salesLeaderProducts = firestoreRepository.fetchSalesLeaderCarouselProducts()
         _salesLeaderProducts.value = salesLeaderProducts
     }
 
-    suspend fun fetchVegetarianProducts() {
-        val vegetarianProducts = firestoreRepository.fetchVegetarianProducts()
+    suspend fun fetchVegetarianCarouselProducts() {
+        val vegetarianProducts = firestoreRepository.fetchVegetarianCarouselProducts()
         _vegetarianProducts.value = vegetarianProducts
+    }
+
+    suspend fun fetchSpicyCarouselProducts() {
+        val spicyProducts = firestoreRepository.fetchSpicyCarouselProducts()
+        _spicyProducts.value = spicyProducts
     }
 
     fun onFoodSectionClicked(flag: Int) {
         _selectedFoodSectionPosition.value = flag
-    }
-
-
-    suspend fun navigateToFoodSectionProducts(
-        sectionName: String,
-        onResult: (MutableList<Product>) -> Unit
-    ) {
-        val products = firestoreRepository.fetchFoodSectionProducts(sectionName)
-        _isNavigatedToFoodSectionProducts.value = true
-    }
-
-    fun navigatedToFoodSectionProducts() {
-        _isNavigatedToFoodSectionProducts.value = false
     }
 
     fun onSalesLeaderProductCLick(position: Int) {
@@ -85,6 +80,14 @@ class MainFragmentViewModel : ViewModel() {
         _clickedVegetarianProductPosition.value = flag
     }
 
+    fun onSpicyProductCLick(position: Int) {
+        _clickedSpicyProductPosition.value = position
+    }
+
+    fun onSpicyProductClicked(flag: Int) {
+        _clickedSpicyProductPosition.value = flag
+    }
+
     suspend fun fetchCarouselProductData(productRef: DocumentReference) {
         val product = firestoreRepository.fetchCarouselProductData(productRef)
         _carouselProduct.value = product
@@ -93,5 +96,6 @@ class MainFragmentViewModel : ViewModel() {
     fun onFetchedCarouselProductData() {
         _carouselProduct.value = null
     }
+
 
 }
