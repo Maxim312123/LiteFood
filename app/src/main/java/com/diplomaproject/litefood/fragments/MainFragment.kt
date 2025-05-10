@@ -26,7 +26,6 @@ import com.diplomaproject.litefood.databinding.FragmentMainBinding
 import com.diplomaproject.litefood.fragments.view_models.MainFragmentViewModel
 import com.diplomaproject.litefood.repository.FirestoreDatabaseRepository
 import com.google.android.material.appbar.MaterialToolbar
-import com.google.android.material.carousel.CarouselLayoutManager
 import com.google.android.material.carousel.CarouselSnapHelper
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -39,9 +38,11 @@ class MainFragment : Fragment(), MenuProvider {
     private lateinit var rvFoodSections: RecyclerView
     private lateinit var rvSalesLeaderProducts: RecyclerView
     private lateinit var rvVegetarianProducts: RecyclerView
+    private lateinit var rvSpicyProducts: RecyclerView
     private lateinit var foodSectionAdapter: FoodSectionAdapter
-    private lateinit var salesLeaderProductAdapter: CarouselProductAdapter
-    private lateinit var vegetarianProductAdapter: CarouselProductAdapter
+    private lateinit var salesLeaderCarouselProductAdapter: CarouselProductAdapter
+    private lateinit var vegetarianCarouselProductAdapter: CarouselProductAdapter
+    private lateinit var spicyCarouselProductAdapter: CarouselProductAdapter
 
     private val firestoreDatabaseRepository: FirestoreDatabaseRepository by lazy {
         FirebaseService.firestoreDatabaseRepository
@@ -58,29 +59,37 @@ class MainFragment : Fragment(), MenuProvider {
             viewModel.fetchFoodSections()
         }
 
-        val fetchSalesLeaderProductsJob = lifecycleScope.launch {
-            viewModel.fetchSalesLeaderProducts()
+        val fetchSalesLeaderCarouselProductsJob = lifecycleScope.launch {
+            viewModel.fetchSalesLeaderCarouselProducts()
         }
 
-        val fetchVegetarianProductsJob = lifecycleScope.launch {
-            viewModel.fetchVegetarianProducts()
+        val fetchVegetarianCarouselProductsJob = lifecycleScope.launch {
+            viewModel.fetchVegetarianCarouselProducts()
+        }
+
+        val fetchSpicyCarouselProductsJob = lifecycleScope.launch {
+            viewModel.fetchSpicyCarouselProducts()
         }
 
         completingCoroutines.add(fetchFoodSectionsJob)
-        completingCoroutines.add(fetchSalesLeaderProductsJob)
-        completingCoroutines.add(fetchVegetarianProductsJob)
+        completingCoroutines.add(fetchSalesLeaderCarouselProductsJob)
+        completingCoroutines.add(fetchVegetarianCarouselProductsJob)
+        completingCoroutines.add(fetchSpicyCarouselProductsJob)
 
         fetchFoodSectionsJob.invokeOnCompletion {
             removeCompletingCoroutine(fetchFoodSectionsJob)
         }
-        fetchSalesLeaderProductsJob.invokeOnCompletion {
-            removeCompletingCoroutine(fetchSalesLeaderProductsJob)
+        fetchSalesLeaderCarouselProductsJob.invokeOnCompletion {
+            removeCompletingCoroutine(fetchSalesLeaderCarouselProductsJob)
         }
 
-        fetchVegetarianProductsJob.invokeOnCompletion {
-            removeCompletingCoroutine(fetchSalesLeaderProductsJob)
+        fetchVegetarianCarouselProductsJob.invokeOnCompletion {
+            removeCompletingCoroutine(fetchVegetarianCarouselProductsJob)
         }
 
+        fetchSpicyCarouselProductsJob.invokeOnCompletion {
+            removeCompletingCoroutine(fetchSpicyCarouselProductsJob)
+        }
     }
 
     override fun onCreateView(
@@ -118,14 +127,14 @@ class MainFragment : Fragment(), MenuProvider {
         }
 
         viewModel.salesLeaderProducts.observe(viewLifecycleOwner) { salesLeaderProducts ->
-            salesLeaderProductAdapter =
-                CarouselProductAdapter(requireActivity(), viewModel, salesLeaderProducts)
-            rvSalesLeaderProducts.adapter = salesLeaderProductAdapter
+            salesLeaderCarouselProductAdapter =
+                CarouselProductAdapter(viewModel, salesLeaderProducts)
+            rvSalesLeaderProducts.adapter = salesLeaderCarouselProductAdapter
         }
 
         viewModel.clickedSalesLeaderProductPosition.observe(viewLifecycleOwner) { position ->
             if (position != -1) {
-                val productRef = salesLeaderProductAdapter.getProduct(position).productRef
+                val productRef = salesLeaderCarouselProductAdapter.getProduct(position).productRef
 
                 val job = viewLifecycleOwner.lifecycleScope.launch {
                     viewModel.fetchCarouselProductData(productRef)
@@ -155,14 +164,14 @@ class MainFragment : Fragment(), MenuProvider {
 
 
         viewModel.vegetarianProducts.observe(viewLifecycleOwner) { vegetarianProducts ->
-            vegetarianProductAdapter =
-                CarouselProductAdapter(requireActivity(), viewModel, vegetarianProducts)
-            rvVegetarianProducts.adapter = vegetarianProductAdapter
+            vegetarianCarouselProductAdapter =
+                CarouselProductAdapter(viewModel, vegetarianProducts)
+            rvVegetarianProducts.adapter = vegetarianCarouselProductAdapter
         }
 
         viewModel.clickedVegetarianProductPosition.observe(viewLifecycleOwner) { position ->
             if (position != -1) {
-                val productRef = vegetarianProductAdapter.getProduct(position).productRef
+                val productRef = vegetarianCarouselProductAdapter.getProduct(position).productRef
 
                 val job = viewLifecycleOwner.lifecycleScope.launch {
                     viewModel.fetchCarouselProductData(productRef)
@@ -176,6 +185,29 @@ class MainFragment : Fragment(), MenuProvider {
                 viewModel.onVegetarianProductClicked(-1)
             }
         }
+
+        viewModel.clickedSpicyProductPosition.observe(viewLifecycleOwner) { position ->
+            if (position != -1) {
+                val productRef = spicyCarouselProductAdapter.getProduct(position).productRef
+
+                val job = viewLifecycleOwner.lifecycleScope.launch {
+                    viewModel.fetchCarouselProductData(productRef)
+                }
+
+                completingCoroutines.add(job)
+                job.invokeOnCompletion {
+                    removeCompletingCoroutine(job)
+                }
+
+                viewModel.onSpicyProductClicked(-1)
+            }
+        }
+
+        viewModel.spicyProducts.observe(viewLifecycleOwner) { spicyProducts ->
+            spicyCarouselProductAdapter =
+                CarouselProductAdapter(viewModel, spicyProducts)
+            rvSpicyProducts.adapter = spicyCarouselProductAdapter
+        }
     }
 
     private fun setupToolbar() {
@@ -186,10 +218,11 @@ class MainFragment : Fragment(), MenuProvider {
     @SuppressLint("RestrictedApi", "WrongConstant")
     private fun initViews() {
         rvFoodSections = binding.rvFoodSections!!
-        rvVegetarianProducts = binding.rvVegetarianProducts!!
 
         rvSalesLeaderProducts = binding.rvHitSales!!
-        rvSalesLeaderProducts.setLayoutManager(CarouselLayoutManager())
+        rvVegetarianProducts = binding.rvVegetarianProducts!!
+        rvSpicyProducts = binding.rvSpicyProducts!!
+
         val carouselSnapHelper = CarouselSnapHelper()
         carouselSnapHelper.attachToRecyclerView(rvSalesLeaderProducts)
 

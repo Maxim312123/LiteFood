@@ -17,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.PreferenceManager;
 
@@ -28,10 +29,10 @@ import com.diplomaproject.litefood.databinding.ActivityMainBinding;
 import com.diplomaproject.litefood.fragments.AddressFragment;
 import com.diplomaproject.litefood.fragments.AnonymousProfileFragment;
 import com.diplomaproject.litefood.fragments.AuthorizedProfileFragment;
+import com.diplomaproject.litefood.fragments.CartFragment;
 import com.diplomaproject.litefood.fragments.EmptyShoppingBasketFragment;
 import com.diplomaproject.litefood.fragments.FoodCategoryFragment;
 import com.diplomaproject.litefood.fragments.MainFragment;
-import com.diplomaproject.litefood.fragments.CartFragment;
 import com.diplomaproject.litefood.interfaces.BottomNavigationViewSelectedItem;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -77,7 +78,7 @@ public class MainActivity extends AppCompatActivity implements
         if (firebaseCurrentUser != null && !firebaseCurrentUser.isAnonymous()) {
             readUserData();
         }
-       // setupMainFragment();
+        // setupMainFragment();
         setupBottomNavigationView();
     }
 
@@ -111,8 +112,8 @@ public class MainActivity extends AppCompatActivity implements
             } else if (itemId == R.id.addresses) {
                 Fragment addressFragment = new AddressFragment();
                 getSupportFragmentManager().beginTransaction().replace(
-                                R.id.fragment_container, addressFragment
-                        ).addToBackStack("AddressFragment").commit();
+                        R.id.fragment_container, addressFragment
+                ).addToBackStack("AddressFragment").commit();
             } else if (itemId == R.id.settings) {
                 Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
                 startActivity(intent);
@@ -196,6 +197,9 @@ public class MainActivity extends AppCompatActivity implements
             @SuppressLint("NonConstantResourceId")
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+                FragmentTransaction fragmentTransaction =  getSupportFragmentManager().beginTransaction();
+
                 Fragment selectedFragment = null;
                 ActionBar actionBar = getSupportActionBar();
                 FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -207,7 +211,6 @@ public class MainActivity extends AppCompatActivity implements
                     selectedFragment = new FoodCategoryFragment();
                 } else if (selectedItemId == R.id.basket) {
                     if (user.getBasket() != null) {
-
                         selectedFragment = CartFragment.newInstance(user);
                     } else {
                         selectedFragment = new EmptyShoppingBasketFragment();

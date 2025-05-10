@@ -6,6 +6,7 @@ import com.diplomaproject.litefood.data.FoodCategory
 import com.diplomaproject.litefood.data.FoodSection
 import com.diplomaproject.litefood.data.Product
 import com.diplomaproject.litefood.data.SalesLeaderCarouselProduct
+import com.diplomaproject.litefood.data.SpicyCarouselProduct
 import com.diplomaproject.litefood.data.VegetarianCarouselProduct
 import com.diplomaproject.litefood.utils.AppUtils
 import com.google.firebase.firestore.DocumentReference
@@ -124,7 +125,7 @@ class FirestoreDatabaseRepository {
     }
 
 
-    suspend fun fetchSalesLeaderProducts(): MutableList<SalesLeaderCarouselProduct> {
+    suspend fun fetchSalesLeaderCarouselProducts(): MutableList<SalesLeaderCarouselProduct> {
         val collectionRef = database.collection("hit sales products")
             .document("language").collection(AppUtils.getCurrentUserLanguage())
 
@@ -161,7 +162,7 @@ class FirestoreDatabaseRepository {
         }
     }
 
-    suspend fun fetchVegetarianProducts(): MutableList<VegetarianCarouselProduct> {
+    suspend fun fetchVegetarianCarouselProducts(): MutableList<VegetarianCarouselProduct> {
         val collectionRef = database.collection("for vegetarian")
             .document("language").collection(AppUtils.getCurrentUserLanguage())
 
@@ -173,6 +174,30 @@ class FirestoreDatabaseRepository {
                     if (task.isSuccessful) {
                         for (document in task.result) {
                             val product = document.toObject<VegetarianCarouselProduct>()
+                            products.add(product)
+                        }
+                        Log.d(TAG, "Read hit sales products successfully")
+                    } else {
+                        Log.d(TAG, "Cannot read hit sales products: ${task.exception?.message}")
+                    }
+                }
+            res.await()
+            products
+        }
+    }
+
+    suspend fun fetchSpicyCarouselProducts(): MutableList<SpicyCarouselProduct> {
+        val collectionRef = database.collection("spicy")
+            .document("language").collection(AppUtils.getCurrentUserLanguage())
+
+        val products = mutableListOf<SpicyCarouselProduct>()
+
+        return coroutineScope {
+            val res = collectionRef.get()
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        for (document in task.result) {
+                            val product = document.toObject<SpicyCarouselProduct>()
                             products.add(product)
                         }
                         Log.d(TAG, "Read hit sales products successfully")
