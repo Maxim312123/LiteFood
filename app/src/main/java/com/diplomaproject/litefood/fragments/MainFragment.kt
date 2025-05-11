@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.diplomaproject.litefood.FirebaseService
 import com.diplomaproject.litefood.FoodSections
 import com.diplomaproject.litefood.R
+import com.diplomaproject.litefood.activities.MainActivity
 import com.diplomaproject.litefood.adapters.CarouselProductAdapter
 import com.diplomaproject.litefood.adapters.FavoriteProductMainFragmentAdapter
 import com.diplomaproject.litefood.adapters.FoodSectionAdapter
@@ -113,6 +114,11 @@ class MainFragment : Fragment(), MenuProvider {
         setupViewObserves()
     }
 
+    override fun onResume() {
+        super.onResume()
+        (requireActivity() as MainActivity).toggleBottomNavigationViewVisibility(true)
+    }
+
     private fun setupViewObserves() {
         viewModel.foodSections.observe(viewLifecycleOwner) { foodSections ->
             foodSectionAdapter =
@@ -156,17 +162,10 @@ class MainFragment : Fragment(), MenuProvider {
 
         viewModel.carouselProduct.observe(viewLifecycleOwner) { product ->
             if (product != null) {
-                parentFragmentManager.beginTransaction()
-                    .replace(
-                        R.id.fragment_container,
-                        ProductDescriptionFragment.newInstance(product)
-                    )
-                    .addToBackStack(null)
-                    .commit()
+                openProductDescriptionFragment(product)
                 viewModel.onFetchedCarouselProductData()
             }
         }
-
 
         viewModel.vegetarianProducts.observe(viewLifecycleOwner) { vegetarianProducts ->
             vegetarianCarouselProductAdapter =
@@ -216,12 +215,13 @@ class MainFragment : Fragment(), MenuProvider {
 
         viewModel.userFavoriteProducts.observe(viewLifecycleOwner) { products ->
             if (products != null && products.isNotEmpty()) {
-                userFavoriteProductAdapter = FavoriteProductMainFragmentAdapter(products)
+                userFavoriteProductAdapter = FavoriteProductMainFragmentAdapter(products, viewModel)
                 rvFavoriteProducts.adapter = userFavoriteProductAdapter
                 viewModel.toggleFavoriteProductsRecyclerViewVisibility(true)
                 viewModel.toggleFavoriteProductsTitleVisibility(true)
             } else {
-                userFavoriteProductAdapter = FavoriteProductMainFragmentAdapter(mutableListOf())
+                userFavoriteProductAdapter =
+                    FavoriteProductMainFragmentAdapter(mutableListOf(), viewModel)
                 viewModel.toggleFavoriteProductsRecyclerViewVisibility(false)
                 viewModel.toggleFavoriteProductsTitleVisibility(false)
             }
@@ -235,6 +235,34 @@ class MainFragment : Fragment(), MenuProvider {
             binding.tvFavoriteProducts?.visibility = if (isVisible) View.VISIBLE else View.GONE
         }
 
+        viewModel.clickedFavoriteProductPosition.observe(viewLifecycleOwner) { position ->
+            if (position != -1) {
+                val clickedProduct = userFavoriteProductAdapter.getProduct(position)
+                viewModel.fetchFavoriteProductData(clickedProduct.id)
+                viewModel.onFavoriteProductClicked()
+            }
+        }
+
+        viewModel.favoriteProductData.observe(viewLifecycleOwner) { product ->
+            product?.let {
+                openProductDescriptionFragment(product)
+                viewModel.onFetchedFavoriteProductData()
+            }
+        }
+
+    }
+
+    private fun openProductDescriptionFragment(product: Product?) {
+        product?.let {
+            parentFragmentManager.beginTransaction()
+                .replace(
+                    R.id.fragment_container,
+                    ProductDescriptionFragment.newInstance(product)
+                )
+                .addToBackStack(null)
+                .commit()
+            (requireActivity() as MainActivity).toggleBottomNavigationViewVisibility(false)
+        }
     }
 
     private fun setupToolbar() {

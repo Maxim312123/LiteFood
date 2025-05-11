@@ -407,4 +407,23 @@ class FirebaseRealtimeDatabaseRepository {
 
         })
     }
+
+    fun fetchFavoriteProductData(productId: String, onResult: (Product) -> Unit) {
+        userFavoriteProductsNodeRef.child(productId)
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    if (dataSnapshot.exists()) {
+                        val product = dataSnapshot.getValue(Product::class.java)
+                        if (product != null) {
+                            onResult(product)
+                        }
+                    }
+                }
+
+                override fun onCancelled(databaseError: DatabaseError) {
+                    Log.d(TAG, "Cannot read favorite product data: ${databaseError.message}")
+                }
+
+            })
+    }
 }

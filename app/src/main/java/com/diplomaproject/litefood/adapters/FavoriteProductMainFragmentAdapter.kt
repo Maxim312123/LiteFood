@@ -11,10 +11,12 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.diplomaproject.litefood.R
 import com.diplomaproject.litefood.data.FavoriteProductMainFragment
 import com.diplomaproject.litefood.databinding.ItemFavoriteProductMainFragmentBinding
+import com.diplomaproject.litefood.fragments.view_models.MainFragmentViewModel
 import com.google.firebase.storage.FirebaseStorage
 
 class FavoriteProductMainFragmentAdapter(
-    private val products: MutableList<FavoriteProductMainFragment>
+    private val products: MutableList<FavoriteProductMainFragment>,
+    private val viewModel: MainFragmentViewModel
 ) :
     RecyclerView.Adapter<FavoriteProductMainFragmentAdapter.FavoriteProductViewHolder>() {
 
@@ -71,7 +73,11 @@ class FavoriteProductMainFragmentAdapter(
         viewHolder.bind(product)
 
         viewHolder.productCard.setOnClickListener {
-
+            viewModel.onFavoriteProductCLick(position)
         }
+    }
+
+    fun getProduct(position: Int): FavoriteProductMainFragment {
+        return products[position]
     }
 }

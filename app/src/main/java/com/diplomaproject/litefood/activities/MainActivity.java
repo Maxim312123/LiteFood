@@ -198,7 +198,7 @@ public class MainActivity extends AppCompatActivity implements
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
-                FragmentTransaction fragmentTransaction =  getSupportFragmentManager().beginTransaction();
+                FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
 
                 Fragment selectedFragment = null;
                 ActionBar actionBar = getSupportActionBar();
@@ -254,5 +254,10 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void changeItemState(int itemId) {
         bottomNavigationItemView.setSelectedItemId(itemId);
+    }
+
+    public void toggleBottomNavigationViewVisibility(Boolean isVisible) {
+        int visibility = (isVisible) ? View.VISIBLE : View.GONE;
+        bottomNavigationItemView.setVisibility(visibility);
     }
 }

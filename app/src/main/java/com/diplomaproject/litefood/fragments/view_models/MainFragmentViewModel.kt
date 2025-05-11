@@ -39,8 +39,14 @@ class MainFragmentViewModel : ViewModel() {
     private val _clickedSpicyProductPosition = MutableLiveData(-1)
     val clickedSpicyProductPosition: LiveData<Int> get() = _clickedSpicyProductPosition
 
+    private val _clickedFavoriteProductPosition = MutableLiveData(-1)
+    val clickedFavoriteProductPosition: LiveData<Int> get() = _clickedFavoriteProductPosition
+
     private val _carouselProduct = MutableLiveData<Product?>(null)
     val carouselProduct: LiveData<Product?> get() = _carouselProduct
+
+    private val _favoriteProductData = MutableLiveData<Product?>(null)
+    val favoriteProductData: LiveData<Product?> get() = _favoriteProductData
 
     private val _userFavoriteProducts = MutableLiveData<MutableList<FavoriteProductMainFragment>>()
     val userFavoriteProducts: LiveData<MutableList<FavoriteProductMainFragment>> get() = _userFavoriteProducts
@@ -52,6 +58,7 @@ class MainFragmentViewModel : ViewModel() {
     private val _isFavoriteProductsTitleVisible = MutableLiveData(false)
     val isFavoriteProductsTitleVisible: LiveData<Boolean> =
         _isFavoriteProductsTitleVisible
+
 
     suspend fun fetchFoodSections() {
         val foodSections = firestoreRepository.fetchFoodSections()
@@ -123,6 +130,25 @@ class MainFragmentViewModel : ViewModel() {
 
     fun toggleFavoriteProductsTitleVisibility(isVisible: Boolean) {
         _isFavoriteProductsTitleVisible.value = isVisible
+    }
+
+
+    fun onFavoriteProductCLick(position: Int) {
+        _clickedFavoriteProductPosition.value = position
+    }
+
+    fun onFavoriteProductClicked() {
+        _clickedFavoriteProductPosition.value = -1
+    }
+
+    fun fetchFavoriteProductData(productId: String){
+         realtimeDatabaseRepository.fetchFavoriteProductData(productId) {product ->
+             _favoriteProductData.value = product
+        }
+    }
+
+    fun onFetchedFavoriteProductData(){
+            _favoriteProductData.value = null
     }
 
 }

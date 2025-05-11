@@ -4,7 +4,7 @@ import android.os.Parcel
 import android.os.Parcelable
 
 class FavoriteProductMainFragment(
-    private val id: String,
+    val id: String,
     val imagePath: String,
     var imageURL: String? = null
 ) : Parcelable {
