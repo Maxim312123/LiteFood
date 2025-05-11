@@ -12,6 +12,7 @@ import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.diplomaproject.litefood.R
 import com.diplomaproject.litefood.activities.MainActivity
@@ -42,6 +43,8 @@ class ProductFragment : Fragment(), MenuProvider, ProductAdapter.OnProductCardVi
 
     private val firebaseRealtimeDatabaseManager = FirebaseRealtimeDatabaseRepository()
 
+    private var savedRecyclerViewScrollPosition = 0
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,6 +52,7 @@ class ProductFragment : Fragment(), MenuProvider, ProductAdapter.OnProductCardVi
             categoryName = it.getString(ARG_CATEGORY_NAME).toString()
             products = it.getParcelableArrayList(ARG_PRODUCTS)!!
         }
+        fetchProducts()
     }
 
     override fun onCreateView(
@@ -63,6 +67,11 @@ class ProductFragment : Fragment(), MenuProvider, ProductAdapter.OnProductCardVi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         init()
+        setupToolbar()
+        requireActivity().addMenuProvider(this, viewLifecycleOwner)
+    }
+
+    private fun fetchProducts() {
         lifecycleScope.launch {
             val favoriteProducts =
                 firebaseRealtimeDatabaseManager.retrieveProductsFromFavorite().await()
@@ -85,23 +94,26 @@ class ProductFragment : Fragment(), MenuProvider, ProductAdapter.OnProductCardVi
                 }
             }
 
+            productAdapter = ProductAdapter(requireActivity(), this@ProductFragment)
             productAdapter.updateProducts(products)
+            recyclerView.adapter = productAdapter
         }
-        setupToolbar()
-        requireActivity().addMenuProvider(this, viewLifecycleOwner)
     }
 
     override fun onResume() {
         super.onResume()
-        if (bottomNavigationView.visibility == View.GONE) {
-            bottomNavigationView.visibility = View.VISIBLE
+        (requireActivity() as MainActivity).toggleBottomNavigationViewVisibility(true)
+        recyclerView.post {
+            recyclerView.scrollToPosition(savedRecyclerViewScrollPosition)
         }
     }
 
     private fun init() {
         recyclerView = binding.recyclerView
-        productAdapter = ProductAdapter(requireActivity(), this)
-        recyclerView.adapter = productAdapter
+        if (::productAdapter.isInitialized) {
+            productAdapter.updateProducts(products)
+            recyclerView.adapter = productAdapter
+        }
         bottomNavigationView =
             (activity as MainActivity).findViewById(R.id.bottomNavigationView)
     }
@@ -132,6 +144,7 @@ class ProductFragment : Fragment(), MenuProvider, ProductAdapter.OnProductCardVi
     }
 
     override fun onProductCardViewClick(position: Int) {
+        savedRecyclerViewScrollPosition = recyclerView.computeVerticalScrollOffset()
         val clickedProduct = productAdapter.getProductByPosition(position)
         parentFragmentManager.beginTransaction()
             .replace(
@@ -140,9 +153,7 @@ class ProductFragment : Fragment(), MenuProvider, ProductAdapter.OnProductCardVi
             )
             .addToBackStack(null)
             .commit()
-        val bottomNavigationView =
-            (activity as MainActivity).findViewById<BottomNavigationView>(R.id.bottomNavigationView)
-        bottomNavigationView.visibility = View.GONE
+        (requireActivity() as MainActivity).toggleBottomNavigationViewVisibility(false)
     }
 
     companion object {

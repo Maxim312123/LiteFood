@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.core.view.MenuProvider
+import androidx.core.widget.NestedScrollView
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -47,6 +48,8 @@ class MainFragment : Fragment(), MenuProvider {
     private lateinit var vegetarianCarouselProductAdapter: CarouselProductAdapter
     private lateinit var spicyCarouselProductAdapter: CarouselProductAdapter
     private lateinit var userFavoriteProductAdapter: FavoriteProductMainFragmentAdapter
+    private lateinit var scrollView: NestedScrollView
+    private var savedScrollPosition = 0
 
     private val firestoreDatabaseRepository: FirestoreDatabaseRepository by lazy {
         FirebaseService.firestoreDatabaseRepository
@@ -112,6 +115,9 @@ class MainFragment : Fragment(), MenuProvider {
         setupToolbar()
         initViews()
         setupViewObserves()
+        scrollView.post {
+            scrollView.scrollTo(0, savedScrollPosition)
+        }
     }
 
     override fun onResume() {
@@ -278,6 +284,7 @@ class MainFragment : Fragment(), MenuProvider {
         rvVegetarianProducts = binding.rvVegetarianProducts!!
         rvSpicyProducts = binding.rvSpicyProducts!!
         rvFavoriteProducts = binding.rvFavoriteProducts!!
+        scrollView = binding.scrollView!!
 
         val carouselSnapHelper = CarouselSnapHelper()
         carouselSnapHelper.attachToRecyclerView(rvSalesLeaderProducts)
@@ -326,7 +333,14 @@ class MainFragment : Fragment(), MenuProvider {
             it.cancel()
         }
         completingCoroutines.clear()
+        savedScrollPosition = scrollView.scrollY
     }
+
+//    override fun onSaveInstanceState(outState: Bundle) {
+//        super.onSaveInstanceState(outState)
+//        savedScrollPosition = scrollView.scrollY
+//        outState.putInt("scrollY", savedScrollPosition)
+//    }
 
     private fun removeCompletingCoroutine(job: Job) {
         completingCoroutines.remove(job)
