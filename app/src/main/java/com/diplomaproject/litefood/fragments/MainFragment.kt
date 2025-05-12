@@ -134,7 +134,7 @@ class MainFragment : Fragment(), MenuProvider {
     override fun onResume() {
         super.onResume()
         (requireActivity() as MainActivity).toggleBottomNavigationViewVisibility(true)
-        val handler = Handler(Looper.getMainLooper())
+        val handler = android.os.Handler(Looper.getMainLooper())
 
         handler.postDelayed({
             shimmerLayout.stopShimmer()

@@ -31,7 +31,6 @@ import com.diplomaproject.litefood.fragments.AddressFragment;
 import com.diplomaproject.litefood.fragments.AnonymousProfileFragment;
 import com.diplomaproject.litefood.fragments.AuthorizedProfileFragment;
 import com.diplomaproject.litefood.fragments.CartFragment;
-import com.diplomaproject.litefood.fragments.EmptyShoppingBasketFragment;
 import com.diplomaproject.litefood.fragments.FoodCategoryFragment;
 import com.diplomaproject.litefood.fragments.MainFragment;
 import com.diplomaproject.litefood.interfaces.BottomNavigationViewSelectedItem;
@@ -42,6 +41,7 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.List;
 import java.util.Locale;
 
 
@@ -57,6 +57,10 @@ public class MainActivity extends AppCompatActivity implements
     private BottomNavigationView bottomNavigationItemView;
     private MaterialToolbar toolbar;
     private MainFragment mainFragment;
+    private FoodCategoryFragment foodCategoryFragment;
+    private CartFragment cartFragment;
+    private AuthorizedProfileFragment authorizedProfileFragment;
+    private AnonymousProfileFragment anonymousProfileFragment;
     private FirebaseUser firebaseCurrentUser;
     private Fragment currentFragment;
     private DrawerLayout drawerLayout;
@@ -189,9 +193,8 @@ public class MainActivity extends AppCompatActivity implements
 
     private void setupMainFragment() {
         mainFragment = new MainFragment();
-        getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, mainFragment).addToBackStack("MainFragment")
+        getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, mainFragment)
                 .commit();
-
     }
 
     private void setupBottomNavigationView() {
@@ -202,52 +205,62 @@ public class MainActivity extends AppCompatActivity implements
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-                Fragment selectedFragment = null;
                 ActionBar actionBar = getSupportActionBar();
                 FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
                 int selectedItemId = item.getItemId();
 
-                Fragment currentFragment = fragmentManager.findFragmentById(R.id.fragment_container);
+                List<Fragment> fragments = fragmentManager.getFragments();
 
                 if (selectedItemId == R.id.main) {
-                    //fragmentManager.popBackStackImmediate("MainFragment", 0);
-//                    Fragment fragment = fragmentManager.findFragmentByTag("MainFragment");
-//                    if (fragment != null){
-//                        fragmentTransaction.show(fragment);
-//                        fragmentTransaction.commit();
-//                    }
-                    // fragmentTransaction.show(mainFragment);
-                      selectedFragment = new MainFragment();
+                    closeOpenedFragments(fragments, fragmentTransaction);
+                    fragmentTransaction.show(mainFragment).commit();
                 } else if (selectedItemId == R.id.categories) {
-                    selectedFragment = new FoodCategoryFragment();
-                } else if (selectedItemId == R.id.basket) {
-                    if (user.getBasket() != null) {
-                        selectedFragment = CartFragment.newInstance(user);
+                    if (foodCategoryFragment == null) {
+                        foodCategoryFragment = new FoodCategoryFragment();
+                        closeOpenedFragments(fragments, fragmentTransaction);
+                        fragmentTransaction.add(R.id.fragment_container, foodCategoryFragment)
+                                .commit();
                     } else {
-                        selectedFragment = new EmptyShoppingBasketFragment();
+                        closeOpenedFragments(fragments, fragmentTransaction);
+                        fragmentTransaction.show(foodCategoryFragment).commit();
+                    }
+                } else if (selectedItemId == R.id.basket) {
+                    if (cartFragment == null) {
+                        cartFragment = CartFragment.newInstance(user);
+                        closeOpenedFragments(fragments, fragmentTransaction);
+                        fragmentTransaction.add(R.id.fragment_container, cartFragment)
+                                .commit();
+                    } else {
+                        closeOpenedFragments(fragments, fragmentTransaction);
+                        fragmentTransaction.show(cartFragment).commit();
                     }
                 } else if (selectedItemId == R.id.profile) {
                     if (currentUser.isAnonymous()) {
-                        selectedFragment = new AnonymousProfileFragment();
+                        anonymousProfileFragment = new AnonymousProfileFragment();
+                        closeOpenedFragments(fragments, fragmentTransaction);
+                        fragmentTransaction.add(R.id.fragment_container, anonymousProfileFragment)
+                                .commit();
                         actionBar.setDisplayHomeAsUpEnabled(false);
+                    } else if (!currentUser.isAnonymous()) {
+                        authorizedProfileFragment = new AuthorizedProfileFragment();
+                        closeOpenedFragments(fragments, fragmentTransaction);
+                        fragmentTransaction.add(R.id.fragment_container, authorizedProfileFragment)
+                                .commit();
                     } else {
-                        selectedFragment = new AuthorizedProfileFragment();
+                        closeOpenedFragments(fragments, fragmentTransaction);
+                        fragmentTransaction.show(cartFragment).commit();
                     }
-                }
-
-
-                if (selectedFragment != null && currentFragment == null
-                        || !currentFragment.getClass().equals(selectedFragment.getClass())) {
-                  //  Fragment fragment = fragmentManager.findFragmentByTag("MainFragment");
-                   // fragmentTransaction.hide(mainFragment);
-                   // currentFragment = selectedFragment;
-                    fragmentTransaction.replace(R.id.fragment_container, selectedFragment).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                            .commit();
                 }
                 return true;
 
             }
         });
+    }
+
+    private void closeOpenedFragments(List<Fragment> fragments, FragmentTransaction fragmentTransaction) {
+        for (Fragment fragment : fragments) {
+            fragmentTransaction.hide(fragment);
+        }
     }
 
     private void setLocale(String languageCode) {
