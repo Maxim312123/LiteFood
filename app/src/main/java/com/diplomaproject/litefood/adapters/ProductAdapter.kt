@@ -23,7 +23,6 @@ import com.diplomaproject.litefood.data.Product
 import com.diplomaproject.litefood.databinding.ItemProductBinding
 import com.diplomaproject.litefood.repository.FirebaseRealtimeDatabaseRepository
 import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.StorageReference
 import java.text.DecimalFormat
 
 private const val PAYLOAD_COUNT_AND_PRICE = "payload_count_and_price"
@@ -60,13 +59,44 @@ class ProductAdapter(
             tvPrice.text = getFormattedTotalPrice(product)
             etCounter.setText(product.amount.toString())
 
-            val storage = FirebaseStorage.getInstance()
-            val storageRef = storage.getReference()
-            val fileRef: StorageReference = storageRef.child(product.imageURL)
-            fileRef.downloadUrl.addOnSuccessListener { uri ->
+            if (product.imagePath == null) {
+                val storageRef = FirebaseStorage.getInstance().getReference(product.imageURL)
+                storageRef.downloadUrl.addOnSuccessListener { uri ->
+                    product.imagePath = uri.toString()
+                    Glide
+                        .with(itemView.context)
+                        .load(uri.toString())
+                        .listener(object : RequestListener<Drawable> {
+                            override fun onLoadFailed(
+                                p0: GlideException?,
+                                p1: Any?,
+                                p2: Target<Drawable>?,
+                                p3: Boolean
+                            ): Boolean {
+                                progressBar.visibility = View.GONE
+                                return false
+                            }
+
+                            override fun onResourceReady(
+                                p0: Drawable?,
+                                p1: Any?,
+                                p2: Target<Drawable>?,
+                                p3: DataSource?,
+                                p4: Boolean
+                            ): Boolean {
+                                progressBar.visibility = View.GONE
+                                return false
+                            }
+
+                        })
+                        .transition(DrawableTransitionOptions.withCrossFade())
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .into(ivDrinkImage)
+                }
+            } else {
                 Glide
                     .with(itemView.context)
-                    .load(uri.toString())
+                    .load(product.imagePath)
                     .listener(object : RequestListener<Drawable> {
                         override fun onLoadFailed(
                             p0: GlideException?,

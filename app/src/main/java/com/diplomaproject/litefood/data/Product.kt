@@ -14,7 +14,8 @@ class Product(
     ingredients: List<String>,
     macronutrients: Map<String, Double>,
     calorificValue: Int,
-    weight: Int
+    weight: Int,
+    var imagePath: String? = null
 ) : BaseProduct(
     id, name, pricePerUnit, imageURL, type, ingredients, macronutrients, calorificValue, weight
 ),

@@ -106,6 +106,12 @@ class ProductFragment : Fragment(), MenuProvider, ProductAdapter.OnProductCardVi
         recyclerView.post {
             recyclerView.scrollToPosition(savedRecyclerViewScrollPosition)
         }
+
+    }
+
+    override fun onStop() {
+        super.onStop()
+        savedRecyclerViewScrollPosition = recyclerView.computeVerticalScrollOffset()
     }
 
     private fun init() {
@@ -144,7 +150,6 @@ class ProductFragment : Fragment(), MenuProvider, ProductAdapter.OnProductCardVi
     }
 
     override fun onProductCardViewClick(position: Int) {
-        savedRecyclerViewScrollPosition = recyclerView.computeVerticalScrollOffset()
         val clickedProduct = productAdapter.getProductByPosition(position)
         parentFragmentManager.beginTransaction()
             .replace(
@@ -155,6 +160,8 @@ class ProductFragment : Fragment(), MenuProvider, ProductAdapter.OnProductCardVi
             .commit()
         (requireActivity() as MainActivity).toggleBottomNavigationViewVisibility(false)
     }
+
+
 
     companion object {
         @JvmStatic

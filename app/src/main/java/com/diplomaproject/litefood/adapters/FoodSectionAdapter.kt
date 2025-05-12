@@ -1,12 +1,17 @@
 package com.diplomaproject.litefood.adapters
 
+import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
 import com.diplomaproject.litefood.R
 import com.diplomaproject.litefood.data.FoodSection
 import com.diplomaproject.litefood.databinding.ItemFoodSectionBinding
@@ -23,6 +28,7 @@ class FoodSectionAdapter(
         val binding = ItemFoodSectionBinding.bind(itemView)
         val imageFoodSection = binding.imageFoodSection
         val titleFoodSection = binding.titleFoodSection
+      //  val skeletonCardView = binding.skeletonCardView
 
         fun bind(foodSection: FoodSection) {
             titleFoodSection.text = foodSection.title
@@ -42,6 +48,29 @@ class FoodSectionAdapter(
                     Glide
                         .with(itemView.context)
                         .load(uri.toString())
+                        .listener(object : RequestListener<Drawable> {
+                            override fun onLoadFailed(
+                                p0: GlideException?,
+                                p1: Any?,
+                                p2: Target<Drawable>?,
+                                p3: Boolean
+                            ): Boolean {
+                                //skeletonCardView.visibility = View.GONE
+                                return false
+                            }
+
+                            override fun onResourceReady(
+                                p0: Drawable?,
+                                p1: Any?,
+                                p2: Target<Drawable>?,
+                                p3: DataSource?,
+                                p4: Boolean
+                            ): Boolean {
+                                //skeletonCardView.visibility = View.GONE
+                                return false
+                            }
+
+                        })
                         .transition(DrawableTransitionOptions.withCrossFade())
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .into(imageFoodSection)
@@ -50,6 +79,29 @@ class FoodSectionAdapter(
                 Glide
                     .with(itemView.context)
                     .load(foodSection.imageURL)
+                    .listener(object : RequestListener<Drawable> {
+                        override fun onLoadFailed(
+                            p0: GlideException?,
+                            p1: Any?,
+                            p2: Target<Drawable>?,
+                            p3: Boolean
+                        ): Boolean {
+                          //  skeletonCardView.visibility = View.INVISIBLE
+                            return false
+                        }
+
+                        override fun onResourceReady(
+                            p0: Drawable?,
+                            p1: Any?,
+                            p2: Target<Drawable>?,
+                            p3: DataSource?,
+                            p4: Boolean
+                        ): Boolean {
+                           // skeletonCardView.visibility = View.INVISIBLE
+                            return false
+                        }
+
+                    })
                     .transition(DrawableTransitionOptions.withCrossFade())
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .skipMemoryCache(false)

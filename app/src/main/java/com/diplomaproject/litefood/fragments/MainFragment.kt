@@ -2,6 +2,8 @@ package com.diplomaproject.litefood.fragments
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -14,6 +16,7 @@ import androidx.core.view.MenuProvider
 import androidx.core.widget.NestedScrollView
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.commit
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
@@ -28,6 +31,7 @@ import com.diplomaproject.litefood.data.Product
 import com.diplomaproject.litefood.databinding.FragmentMainBinding
 import com.diplomaproject.litefood.fragments.view_models.MainFragmentViewModel
 import com.diplomaproject.litefood.repository.FirestoreDatabaseRepository
+import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.carousel.CarouselSnapHelper
 import kotlinx.coroutines.Job
@@ -49,7 +53,11 @@ class MainFragment : Fragment(), MenuProvider {
     private lateinit var spicyCarouselProductAdapter: CarouselProductAdapter
     private lateinit var userFavoriteProductAdapter: FavoriteProductMainFragmentAdapter
     private lateinit var scrollView: NestedScrollView
+
     private var savedScrollPosition = 0
+    private var savedSalesLeaderProductsScrollPosition = 0
+
+    private lateinit var shimmerLayout: ShimmerFrameLayout
 
     private val firestoreDatabaseRepository: FirestoreDatabaseRepository by lazy {
         FirebaseService.firestoreDatabaseRepository
@@ -112,24 +120,49 @@ class MainFragment : Fragment(), MenuProvider {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupToolbar()
         initViews()
+        shimmerLayout.startShimmer()
+        setupToolbar()
         setupViewObserves()
-        scrollView.post {
-            scrollView.scrollTo(0, savedScrollPosition)
+        if (scrollView.visibility == View.VISIBLE) {
+            scrollView.post {
+                scrollView.scrollTo(0, savedScrollPosition)
+            }
         }
     }
 
     override fun onResume() {
         super.onResume()
         (requireActivity() as MainActivity).toggleBottomNavigationViewVisibility(true)
+        val handler = Handler(Looper.getMainLooper())
+
+        handler.postDelayed({
+            shimmerLayout.stopShimmer()
+            shimmerLayout.visibility = View.GONE
+            scrollView.visibility = View.VISIBLE
+        }, 1500)
     }
+
+    override fun onStop() {
+        super.onStop()
+        completingCoroutines.forEach {
+            it.cancel()
+        }
+        completingCoroutines.clear()
+
+        savedScrollPosition = scrollView.scrollY
+
+    }
+
 
     private fun setupViewObserves() {
         viewModel.foodSections.observe(viewLifecycleOwner) { foodSections ->
             foodSectionAdapter =
                 FoodSectionAdapter(foodSections.asReversed(), viewModel)
             rvFoodSections.adapter = foodSectionAdapter
+
+            binding.shimmerViewContainer?.stopShimmer()
+            binding.shimmerViewContainer?.setVisibility(View.GONE)
         }
 
         viewModel.selectedFoodSectionPosition.observe(viewLifecycleOwner) { position ->
@@ -280,6 +313,8 @@ class MainFragment : Fragment(), MenuProvider {
     private fun initViews() {
         rvFoodSections = binding.rvFoodSections!!
 
+        shimmerLayout = binding.shimmerLayout!!
+
         rvSalesLeaderProducts = binding.rvHitSales!!
         rvVegetarianProducts = binding.rvVegetarianProducts!!
         rvSpicyProducts = binding.rvSpicyProducts!!
@@ -288,7 +323,6 @@ class MainFragment : Fragment(), MenuProvider {
 
         val carouselSnapHelper = CarouselSnapHelper()
         carouselSnapHelper.attachToRecyclerView(rvSalesLeaderProducts)
-
     }
 
     override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
@@ -316,24 +350,19 @@ class MainFragment : Fragment(), MenuProvider {
             val products = firestoreDatabaseRepository.fetchFoodSectionProducts(foodSectionName)
 
             val shuffledProducts = products.shuffled() as MutableList<Product>
-            parentFragmentManager.beginTransaction().replace(
-                R.id.fragment_container,
-                ProductFragment.newInstance(toolbarTitle, shuffledProducts)
-            ).addToBackStack(null).commit()
+
+            parentFragmentManager.commit {
+                replace(
+                    R.id.fragment_container,
+                    ProductFragment.newInstance(toolbarTitle, shuffledProducts)
+                )
+                addToBackStack(null)
+            }
         }
         completingCoroutines.add(job)
         job.invokeOnCompletion {
             removeCompletingCoroutine(job)
         }
-    }
-
-    override fun onStop() {
-        super.onStop()
-        completingCoroutines.forEach {
-            it.cancel()
-        }
-        completingCoroutines.clear()
-        savedScrollPosition = scrollView.scrollY
     }
 
 //    override fun onSaveInstanceState(outState: Bundle) {

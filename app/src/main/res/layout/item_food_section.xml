@@ -5,37 +5,38 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/cardFoodSection"
-        android:layout_width="100dp"
-        android:layout_height="70dp"
-        android:layout_margin="5dp"
-        app:cardCornerRadius="20dp"
-        app:cardElevation="8dp"
-        android:foreground="?attr/selectableItemBackground"
-        android:clickable="true"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardFoodSection"
+            android:layout_width="100dp"
+            android:layout_height="70dp"
+            android:layout_margin="5dp"
+            android:clickable="true"
+            android:foreground="?attr/selectableItemBackground"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="8dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <ImageView
-                android:id="@+id/imageFoodSection"
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:foreground="@color/food_section_color_foreground"
-                android:scaleType="fitXY"
-                tools:src="@drawable/spicy" />
+                android:layout_height="match_parent">
 
-            <TextView
-                android:id="@+id/titleFoodSection"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:textColor="@color/white"
-                tools:text="Острое" />
-        </FrameLayout>
-    </com.google.android.material.card.MaterialCardView>
+                <ImageView
+                    android:id="@+id/imageFoodSection"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:foreground="@color/food_section_color_foreground"
+                    android:scaleType="fitXY"
+                    tools:src="@drawable/spicy" />
+
+                <TextView
+                    android:id="@+id/titleFoodSection"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:textColor="@color/white"
+                    tools:text="Острое" />
+            </FrameLayout>
+        </com.google.android.material.card.MaterialCardView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -17,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.PreferenceManager;
@@ -188,8 +189,9 @@ public class MainActivity extends AppCompatActivity implements
 
     private void setupMainFragment() {
         mainFragment = new MainFragment();
-        getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, mainFragment)
+        getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, mainFragment).addToBackStack("MainFragment")
                 .commit();
+
     }
 
     private void setupBottomNavigationView() {
@@ -197,16 +199,25 @@ public class MainActivity extends AppCompatActivity implements
             @SuppressLint("NonConstantResourceId")
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-
-                FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
                 Fragment selectedFragment = null;
                 ActionBar actionBar = getSupportActionBar();
                 FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
                 int selectedItemId = item.getItemId();
 
+                Fragment currentFragment = fragmentManager.findFragmentById(R.id.fragment_container);
+
                 if (selectedItemId == R.id.main) {
-                    selectedFragment = new MainFragment();
+                    //fragmentManager.popBackStackImmediate("MainFragment", 0);
+//                    Fragment fragment = fragmentManager.findFragmentByTag("MainFragment");
+//                    if (fragment != null){
+//                        fragmentTransaction.show(fragment);
+//                        fragmentTransaction.commit();
+//                    }
+                    // fragmentTransaction.show(mainFragment);
+                      selectedFragment = new MainFragment();
                 } else if (selectedItemId == R.id.categories) {
                     selectedFragment = new FoodCategoryFragment();
                 } else if (selectedItemId == R.id.basket) {
@@ -224,11 +235,13 @@ public class MainActivity extends AppCompatActivity implements
                     }
                 }
 
+
                 if (selectedFragment != null && currentFragment == null
                         || !currentFragment.getClass().equals(selectedFragment.getClass())) {
-                    currentFragment = selectedFragment;
-                    getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.fragment_container, selectedFragment)
+                  //  Fragment fragment = fragmentManager.findFragmentByTag("MainFragment");
+                   // fragmentTransaction.hide(mainFragment);
+                   // currentFragment = selectedFragment;
+                    fragmentTransaction.replace(R.id.fragment_container, selectedFragment).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                             .commit();
                 }
                 return true;

@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/tvTitleSectionsSkeleton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/shimmer_color"
+        android:text="@string/title_sections"
+        android:textColor="@color/transparent"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/rvFoodSectionsSkeleton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvTitleSectionsSkeleton">
+
+        <include layout="@layout/layout_skeleton_food_section" />
+
+        <include layout="@layout/layout_skeleton_food_section" />
+
+        <include layout="@layout/layout_skeleton_food_section" />
+
+        <include layout="@layout/layout_skeleton_food_section" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvHitSalesSkeleton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:background="@color/shimmer_color"
+        android:text="@string/title_hit_sales"
+        android:textColor="@color/transparent"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rvFoodSectionsSkeleton" />
+
+    <LinearLayout
+        android:id="@+id/rvHitSalesSkeleton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:orientation="horizontal"
+        app:layoutManager="com.google.android.material.carousel.CarouselLayoutManager"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvHitSalesSkeleton"
+        tools:listitem="@layout/carousel_item_sales_leader_product">
+
+        <include layout="@layout/skeleton_carousel_item" />
+
+        <include layout="@layout/skeleton_carousel_item" />
+
+        <include layout="@layout/skeleton_carousel_item" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvForVegetariansSkeleton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:background="@color/shimmer_color"
+        android:text="@string/title_for_vegetarians"
+        android:textColor="@color/transparent"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rvHitSalesSkeleton" />
+
+    <LinearLayout
+        android:id="@+id/rvVegetarianProductsSkeleton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:orientation="horizontal"
+        app:layoutManager="com.google.android.material.carousel.CarouselLayoutManager"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvForVegetariansSkeleton"
+        tools:listitem="@layout/carousel_item_vegetarian_product">
+
+        <include layout="@layout/skeleton_carousel_item" />
+
+        <include layout="@layout/skeleton_carousel_item" />
+
+        <include layout="@layout/skeleton_carousel_item" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvSpicySkeleton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:background="@color/shimmer_color"
+        android:text="@string/title_spicy_products"
+        android:textColor="@color/transparent"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rvVegetarianProductsSkeleton" />
+
+
+    <LinearLayout
+        android:id="@+id/rvSpicyProductsSkeleton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:orientation="horizontal"
+        app:layoutManager="com.google.android.material.carousel.CarouselLayoutManager"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvSpicySkeleton"
+        tools:listitem="@layout/carousel_item_spicy_product">
+
+        <include layout="@layout/skeleton_carousel_item" />
+
+        <include layout="@layout/skeleton_carousel_item" />
+
+        <include layout="@layout/skeleton_carousel_item" />
+    </LinearLayout>
+
+
+    <TextView
+        android:id="@+id/tvFavoriteProductsSkeleton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:background="@color/shimmer_color"
+        android:text="@string/title_favorite_products"
+        android:textColor="@color/transparent"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rvSpicyProductsSkeleton" />
+
+    <LinearLayout
+        android:id="@+id/rvFavoriteProductsSkeleton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvFavoriteProductsSkeleton"
+        tools:listitem="@layout/item_favorite_product_main_fragment">
+
+        <include layout="@layout/skeleton_favorite_product" />
+
+        <include layout="@layout/skeleton_favorite_product" />
+
+        <include layout="@layout/skeleton_favorite_product" />
+
+        <include layout="@layout/skeleton_favorite_product" />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
