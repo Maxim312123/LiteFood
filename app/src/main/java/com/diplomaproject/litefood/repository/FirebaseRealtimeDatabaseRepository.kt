@@ -2,7 +2,6 @@ package com.diplomaproject.litefood.repository
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
-import com.diplomaproject.litefood.FirebaseAuthService
 import com.diplomaproject.litefood.data.Address
 import com.diplomaproject.litefood.data.BaseProduct
 import com.diplomaproject.litefood.data.CartProduct
@@ -10,6 +9,7 @@ import com.diplomaproject.litefood.data.CreditCard
 import com.diplomaproject.litefood.data.FavoriteProductMainFragment
 import com.diplomaproject.litefood.data.Product
 import com.diplomaproject.litefood.data.User
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
@@ -20,17 +20,18 @@ import kotlinx.coroutines.CompletableDeferred
 private const val TAG = "FirebaseRealTimeDataBaseRepository"
 
 class FirebaseRealtimeDatabaseRepository {
-
-
     var databaseReference: DatabaseReference
         get() = field
-    val userUid: String = FirebaseAuthService().getCurrentUserUid()
+    val userUid: String?
     var userProfileNodeRef: DatabaseReference
     val userShoppingBasketNodeRef: DatabaseReference
     val userFavoriteProductsNodeRef: DatabaseReference
 
     init {
+        val auth = FirebaseAuth.getInstance()
+
         databaseReference = FirebaseDatabase.getInstance().reference
+        userUid = auth.currentUser?.uid.toString()
         userProfileNodeRef = databaseReference.child("Users/$userUid")
         userShoppingBasketNodeRef = userProfileNodeRef.child("basket")
         userFavoriteProductsNodeRef = userProfileNodeRef.child("favoriteProducts")
@@ -425,5 +426,31 @@ class FirebaseRealtimeDatabaseRepository {
                 }
 
             })
+    }
+
+
+    public fun createNewUser(id: String, user: User) {
+        databaseReference.child("Users/$id").setValue(user).addOnCompleteListener {
+            if (it.isSuccessful) {
+                Log.d(TAG, "Cannot read favorite product data:")
+            } else {
+                Log.d(TAG, "Cannot read favorite product data:")
+            }
+        }
+    }
+
+    public fun deleteOldUser(id: String) {
+        databaseReference.child("Users/$id").removeValue().addOnCompleteListener {
+            if (it.isSuccessful) {
+                Log.d("VerificationCodActivity", "USER DATA was deleted successfully")
+            } else {
+                Log.d("VerificationCodActivity", "Cannot delete anonymous USER DATA")
+            }
+        }
+    }
+
+
+    public fun getAnonymousUserBasket(id: String) {
+        databaseReference.child("Users/$id").get()
     }
 }

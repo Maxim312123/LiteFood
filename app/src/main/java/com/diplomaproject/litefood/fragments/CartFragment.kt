@@ -19,6 +19,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.diplomaproject.litefood.R
+import com.diplomaproject.litefood.UserViewModel
 import com.diplomaproject.litefood.activities.MainActivity
 import com.diplomaproject.litefood.adapters.CartAdapter
 import com.diplomaproject.litefood.data.CartProduct
@@ -61,9 +62,9 @@ class CartFragment : Fragment(), MenuProvider, CartAdapter.OnItemClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-        arguments?.let {
-            user = it.getParcelable(ARG_USER)!!
-        }
+//        arguments?.let {
+//            user = it.getParcelable(ARG_USER)!!
+//        }
     }
 
     override fun onCreateView(
@@ -79,11 +80,19 @@ class CartFragment : Fragment(), MenuProvider, CartAdapter.OnItemClickListener {
         cartViewModel = ViewModelProvider(this).get(CartViewModel::class.java)
         initViews()
         init()
-        setUserAddress()
-        fetchBasketProducts()
+        observeUserData()
         setupToolbar()
         setupViewListeners()
-        setupCartObservers()
+    }
+
+    private fun observeUserData() {
+        val userViewModel = ViewModelProvider(this).get(UserViewModel::class.java);
+        userViewModel.user.observe(viewLifecycleOwner) { user ->
+            this.user = user
+            setUserAddress()
+            fetchCartProducts()
+            setupCartObservers()
+        }
     }
 
     override fun onResume() {
@@ -234,13 +243,13 @@ class CartFragment : Fragment(), MenuProvider, CartAdapter.OnItemClickListener {
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private fun fetchBasketProducts() {
+    private fun fetchCartProducts() {
         var basketProducts: MutableList<CartProduct> = convertBasketToList()
 
         cartAdapter = CartAdapter(cartViewModel, basketProducts, this)
         recyclerView.adapter = cartAdapter
 
-        cartViewModel.setProductAmount(11)
+        cartViewModel.setProductAmount(basketProducts.size)
     }
 
     private fun convertBasketToList(): MutableList<CartProduct> {
@@ -273,12 +282,12 @@ class CartFragment : Fragment(), MenuProvider, CartAdapter.OnItemClickListener {
     }
 
     companion object {
-        @JvmStatic
-        fun newInstance(user: User) = CartFragment().apply {
-            arguments = Bundle().apply {
-                putParcelable(ARG_USER, user)
-            }
-        }
+//        @JvmStatic
+//        fun newInstance(user: User) = CartFragment().apply {
+//            arguments = Bundle().apply {
+//                putParcelable(ARG_USER, user)
+//            }
+//        }
 
         const val KEY_PRODUCT = "Product"
     }

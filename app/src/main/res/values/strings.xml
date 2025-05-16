@@ -8,6 +8,11 @@
     <string name="currency">%1$s руб</string>
     <string name="quantity">%1$d шт</string>
 
+
+    <!--    DrawerLayout-->
+    <string name="phone_number">Не указан номер телефона</string>
+    <string name="name">Имя</string>
+
     <!--    WelcomeActivity-->
     <string name="greeting_title">Добро пожаловать!</string>
     <string name="policy_notice">Нажимая на кнопку выше вы соглашаетесь с нашими Условиями использования и Политикой конфиденциальности.</string>
@@ -25,6 +30,9 @@
     <!--    AuthorizationActivity-->
     <string name="invalid_phone_number">Недопустимый формат номера</string>
     <string name="invalid_operator_code">Такого мобильного оператора нет</string>
+    <string name="sign_in_with_google">Войти с помощью Google</string>
+    <string name="btn_continue">Далее</string>
+    <string name="enter_your_phone_number">Введите номер телефона</string>
 
     <!--    VerificationCodeActivity-->
     <string name="successful_login">Вход выполнен</string>

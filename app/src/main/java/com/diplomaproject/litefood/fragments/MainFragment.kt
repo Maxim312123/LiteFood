@@ -154,7 +154,6 @@ class MainFragment : Fragment(), MenuProvider {
 
     }
 
-
     private fun setupViewObserves() {
         viewModel.foodSections.observe(viewLifecycleOwner) { foodSections ->
             foodSectionAdapter =

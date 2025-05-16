@@ -6,13 +6,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background='@drawable/bg_activity'
+    android:fitsSystemWindows="true"
     tools:ignore="MissingClass">
 
     <ImageView
         android:id="@+id/iv_login_picture"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
@@ -73,7 +74,7 @@
         android:layout_marginBottom="212dp"
         android:background="@drawable/shape_btn_rounded"
         android:foreground="@drawable/ripple_color"
-        android:text="Далее"
+        android:text="@string/btn_continue"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -81,13 +82,32 @@
         app:layout_constraintTop_toBottomOf="@+id/phoneNumber_layout"
         app:layout_constraintVertical_bias="0.0" />
 
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_sign_in_with_google"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="40dp"
+        android:background="@drawable/shape_btn_rounded"
+        android:backgroundTint="@color/white"
+        android:drawableStart="@drawable/ic_google"
+        android:foreground="@drawable/ripple_color"
+        android:padding="15dp"
+        android:text="@string/sign_in_with_google"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.495"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_send_sms" />
+
     <TextView
         android:id="@+id/tv_phone_number_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
         android:fontFamily="@font/roboto_regular"
-        android:text="Введите номер телефона"
+        android:text="@string/enter_your_phone_number"
         android:textColor="@color/white"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -106,7 +126,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"></androidx.appcompat.widget.Toolbar>
+        app:layout_constraintTop_toTopOf="parent"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

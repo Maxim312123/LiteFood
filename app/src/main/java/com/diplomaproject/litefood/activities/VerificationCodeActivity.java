@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -25,10 +26,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.diplomaproject.litefood.R;
+import com.diplomaproject.litefood.data.CartProduct;
 import com.diplomaproject.litefood.data.User;
 import com.diplomaproject.litefood.databinding.ActivityVerificationCodeBinding;
 import com.diplomaproject.litefood.dialogs.SuccessLoginDialog;
+import com.diplomaproject.litefood.repository.FirebaseRealtimeDatabaseRepository;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
@@ -38,6 +42,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.function.Consumer;
+
+import kotlin.jvm.JvmStatic;
 import ru.tinkoff.decoro.MaskImpl;
 import ru.tinkoff.decoro.parser.UnderscoreDigitSlotsParser;
 import ru.tinkoff.decoro.slots.Slot;
@@ -45,6 +54,8 @@ import ru.tinkoff.decoro.watchers.FormatWatcher;
 import ru.tinkoff.decoro.watchers.MaskFormatWatcher;
 
 public class VerificationCodeActivity extends AppCompatActivity {
+
+    private static final String TAG = "VerificationCodActivity";
 
     private ActivityVerificationCodeBinding binding;
     private FirebaseAuth firebaseAuth;
@@ -56,7 +67,7 @@ public class VerificationCodeActivity extends AppCompatActivity {
     private ObjectAnimator animator;
     private FormatWatcher formatWatcher;
     private FirebaseDatabase firebaseDatabase;
-    private DatabaseReference databaseReference;
+    private DatabaseReference realTimeDatabase;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -72,7 +83,7 @@ public class VerificationCodeActivity extends AppCompatActivity {
         etVerificationCode.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 hideKeyboard(etVerificationCode);
-                confirmSmsVerificationCode();
+                submitVerificationCode();
                 return true;
             }
             return false;
@@ -95,7 +106,7 @@ public class VerificationCodeActivity extends AppCompatActivity {
         etVerificationCode = binding.etVerificationCode;
         inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference("Users");
+        realTimeDatabase = firebaseDatabase.getReference("Users/");
     }
 
     private void setTextChangeListenerOnEditText() {
@@ -143,42 +154,20 @@ public class VerificationCodeActivity extends AppCompatActivity {
         }
     }
 
-    private void confirmSmsVerificationCode() {
+    private void submitVerificationCode() {
         String verificationId = getIntent().getStringExtra("verificationId");
-        String enteredCode = etVerificationCode.getText().toString();
-        String modifiedEnteredCode = enteredCode.replaceAll("\\D+", "");
-        if (enteredCode.length() == 16) {
+        String phoneNumber = getIntent().getStringExtra("phone number");
+
+        String verificationCode = etVerificationCode.getText().toString();
+
+        String cleanedVerificationCode = verificationCode.replaceAll("\\D+", "");
+
+        if (cleanedVerificationCode.length() == 6) {
             btnSubmit.setClickable(false);
-            assert verificationId != null;
-            PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationId, modifiedEnteredCode);
-            firebaseAuth.signInWithCredential(credential)
-                    .addOnCompleteListener(this, task -> {
-                        if (task.isSuccessful()) {
-                            String phoneNumber = getIntent().getStringExtra("phone_number");
-                            deleteAnonymousAccount();
-                            databaseReference.orderByChild("phoneNumber").equalTo(phoneNumber).addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                    if (snapshot.exists()) {
-
-                                    } else {
-                                        createNewAccount(phoneNumber);
-                                        createUserBasket();
-                                    }
-                                }
-
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError error) {
-                                }
-                            });
-                            showSuccessfulLoginDialog();
-                        } else {
-                            btnSubmit.setClickable(true);
-                            showInvalidVerificationCodeError();
-                        }
-                    });
+            PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationId, cleanedVerificationCode);
+            signInWithPhoneAuthCredential(credential, phoneNumber);
         } else {
-            if (enteredCode.isEmpty()) {
+            if (verificationCode.isEmpty()) {
                 showNotEnteredVerificationCodeError();
             } else {
                 showInvalidVerificationCodeError();
@@ -186,31 +175,128 @@ public class VerificationCodeActivity extends AppCompatActivity {
         }
     }
 
-    private void createNewAccount(String phoneNumber) {
-        FirebaseUser newUser = firebaseAuth.getCurrentUser();
-        String id = newUser.getUid();
-        User user = new User(phoneNumber);
-        databaseReference.child(id).setValue(user);
+    private void signInWithPhoneAuthCredential(PhoneAuthCredential credential, String phoneNumber) {
+        firebaseAuth.signInWithCredential(credential)
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        FirebaseUser newUser = task.getResult().getUser();
+                        assert newUser != null;
+                        String newUserId = newUser.getUid();
+
+                        if (currentUser != null) {
+                            //Повторный вход
+                            if (currentUser.isAnonymous()) {
+                                checkIfAccountWithPhoneNumberExists(phoneNumber, isExist -> {
+                                    if (!isExist) {
+//                                        retrieveAnonymousUserCart(currentUser.getUid(), cartProducts -> {
+//                                            createNewUserNode(newUserId, phoneNumber);
+//                                        });
+                                        createNewUserNode(newUserId, phoneNumber);
+                                        Log.d(TAG, "Phone number does not exist");
+                                    } else {
+                                        Log.d(TAG, "Phone number has already exists");
+                                    }
+                                });
+                                deleteAnonymousAccount();
+                                deleteAnonymousUserData();
+                                Log.d(TAG, "Current user is an anonymous");
+                            }
+                        } else {
+                            createNewUserNode(newUserId, phoneNumber);
+                            Log.d(TAG, "Current user is NOT an anonymous");
+                        }
+
+                        showSuccessfulLoginDialog();
+                    } else {
+                        if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
+                            Toast.makeText(VerificationCodeActivity.this, "Неверный код", Toast.LENGTH_SHORT).show();
+                        }
+                        btnSubmit.setClickable(true);
+                        showInvalidVerificationCodeError();
+                    }
+                });
     }
 
-    private void createUserBasket(){
+    private void checkIfAccountWithPhoneNumberExists(String phoneNumber, Consumer<Boolean> onResult) {
+        realTimeDatabase.orderByChild("phoneNumber").equalTo(phoneNumber).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    onResult.accept(true);
+                } else {
+                    onResult.accept(false);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
+    }
+
+
+    private void createNewUserNode(String userId, String phoneNumber, ArrayList<CartProduct> cartProducts) {
+        HashMap<String, CartProduct> cartProductsMap = new HashMap<String, CartProduct>();
+        for (CartProduct product : cartProducts) {
+            cartProductsMap.put(product.getId(), product);
+        }
+
+        User user = new User(phoneNumber);
+        user.setBasket(cartProductsMap);
+        realTimeDatabase.child(userId).setValue(user);
+    }
+
+    private void createNewUserNode(String userId, String phoneNumber) {
+        User user = new User(phoneNumber);
+        realTimeDatabase.child(userId).setValue(user);
+    }
+
+    private void createUserBasket() {
         FirebaseUser newUser = firebaseAuth.getCurrentUser();
         String id = newUser.getUid();
-        databaseReference.child(id).child("user_basket").setValue(null);
+        realTimeDatabase.child(id).child("basket").setValue(null);
     }
 
 
     private void deleteAnonymousAccount() {
-        if (currentUser != null && currentUser.isAnonymous()) {
-            currentUser.delete().addOnCompleteListener(this, task1 -> {
-                if (task1.isSuccessful()) {
+        currentUser.delete().addOnCompleteListener(this, task1 -> {
+            if (task1.isSuccessful()) {
+                Log.d(TAG, "Anonymous account was deleted successfully");
+            } else {
+                Log.d(TAG, "Cannot delete anonymous account");
+            }
+        });
+    }
 
-                } else {
-                    Toast.makeText(this, "Не удалось удалить анонимную запись",
-                            Toast.LENGTH_SHORT).show();
+    @JvmStatic
+    private void deleteAnonymousUserData() {
+        FirebaseRealtimeDatabaseRepository firebaseRealtimeDatabaseRepository = new FirebaseRealtimeDatabaseRepository();
+        firebaseRealtimeDatabaseRepository.deleteOldUser(currentUser.getUid());
+    }
+
+    private void retrieveAnonymousUserCart(String userId, Consumer<ArrayList<CartProduct>> onResult) {
+        realTimeDatabase.child(userId + "/basket").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                ArrayList<CartProduct> cartProducts = new ArrayList<>();
+
+                if (dataSnapshot.exists()) {
+                    for (DataSnapshot itemSnapshot : dataSnapshot.getChildren()) {
+                        CartProduct cartProduct =
+                                itemSnapshot.getValue(CartProduct.class);
+                        if (cartProduct != null) {
+                            cartProducts.add(cartProduct);
+                        }
+                    }
+                    onResult.accept(cartProducts);
                 }
-            });
-        }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void showSuccessfulLoginDialog() {
@@ -230,7 +316,7 @@ public class VerificationCodeActivity extends AppCompatActivity {
 
     private void setupListeners() {
         btnSubmit.setOnClickListener(v -> {
-            confirmSmsVerificationCode();
+            submitVerificationCode();
         });
     }
 

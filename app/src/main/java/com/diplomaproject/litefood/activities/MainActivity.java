@@ -6,13 +6,11 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -34,14 +32,15 @@ import com.diplomaproject.litefood.fragments.CartFragment;
 import com.diplomaproject.litefood.fragments.FoodCategoryFragment;
 import com.diplomaproject.litefood.fragments.MainFragment;
 import com.diplomaproject.litefood.interfaces.BottomNavigationViewSelectedItem;
+import com.diplomaproject.litefood.repository.FirebaseRealtimeDatabaseRepository;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
-import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
-import java.util.List;
 import java.util.Locale;
 
 
@@ -57,15 +56,11 @@ public class MainActivity extends AppCompatActivity implements
     private BottomNavigationView bottomNavigationItemView;
     private MaterialToolbar toolbar;
     private MainFragment mainFragment;
-    private FoodCategoryFragment foodCategoryFragment;
-    private CartFragment cartFragment;
-    private AuthorizedProfileFragment authorizedProfileFragment;
-    private AnonymousProfileFragment anonymousProfileFragment;
     private FirebaseUser firebaseCurrentUser;
-    private Fragment currentFragment;
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
     private UserViewModel userViewModel;
+    private FirebaseRealtimeDatabaseRepository realtimeDatabaseRepository;
     private User user;
 
     @Override
@@ -75,7 +70,6 @@ public class MainActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        FirebaseApp.initializeApp(this);
         init();
         setupMainFragment();
         setupListeners();
@@ -83,15 +77,14 @@ public class MainActivity extends AppCompatActivity implements
         if (firebaseCurrentUser != null && !firebaseCurrentUser.isAnonymous()) {
             readUserData();
         }
-        // setupMainFragment();
         setupBottomNavigationView();
     }
+
 
     private void setLanguage(SharedPreferences sharedPreferences) {
         String language = sharedPreferences.getString("list", "ru");
         setLocale(language);
     }
-
 
     private void init() {
         toolbar = (MaterialToolbar) binding.toolbar;
@@ -103,6 +96,7 @@ public class MainActivity extends AppCompatActivity implements
         sharedPreferencesManager = SharedPreferencesManager.getInstance(this);
         drawerLayout = binding.drawerLayout;
         navigationView = binding.navigationView;
+        // realtimeDatabaseRepository = new FirebaseRealtimeDatabaseRepository();
     }
 
     private void setupListeners() {
@@ -122,7 +116,6 @@ public class MainActivity extends AppCompatActivity implements
             } else if (itemId == R.id.settings) {
                 Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
                 startActivity(intent);
-                finish();
             }
             drawerLayout.closeDrawer(GravityCompat.START);
             return true;
@@ -136,12 +129,18 @@ public class MainActivity extends AppCompatActivity implements
                 TextView phoneNumber = headerView.findViewById(R.id.phone_number);
                 userViewModel.getUser().observe(MainActivity.this, user -> {
                     String name = user.getName();
+                    String userPhoneNumber = user.getPhoneNumber();
+
                     if (name != null) {
                         userName.setText(name);
                     } else {
-                        userName.setText("Имя");
+                        userName.setText(getResources().getString(R.string.name));
                     }
-                    phoneNumber.setText(user.getPhoneNumber());
+                    if (userPhoneNumber != null) {
+                        phoneNumber.setText(userPhoneNumber);
+                    } else {
+                        phoneNumber.setText(getResources().getString(R.string.phone_number));
+                    }
                 });
             }
 
@@ -159,20 +158,20 @@ public class MainActivity extends AppCompatActivity implements
         });
     }
 
-    private boolean isAppliedPolicy() {
-        boolean policy = sharedPreferencesManager.getBoolean("AppliedPolicy", false);
-        return policy;
-    }
 
     private void checkPolicyAndAuthenticateUser() {
         if (isAppliedPolicy()) {
             if (firebaseCurrentUser == null) {
-                signInAnoAnonymously();
+                firebaseAuthSignInAnonymously();
             }
         } else if (!isAppliedPolicy()) {
             startActivity(new Intent(MainActivity.this, WelcomeActivity.class));
-            finish();
         }
+    }
+
+    private boolean isAppliedPolicy() {
+        boolean policy = sharedPreferencesManager.getBoolean("AppliedPolicy", false);
+        return policy;
     }
 
     private void readUserData() {
@@ -181,14 +180,19 @@ public class MainActivity extends AppCompatActivity implements
         });
     }
 
-    private void signInAnoAnonymously() {
+    private void firebaseAuthSignInAnonymously() {
         firebaseAuth.signInAnonymously().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                Log.d(TAG, "Пользователь успешно вошел анонимно");
-            } else {
-                Log.d(TAG, "Пользователю не удалось войти анонимно");
+                FirebaseUser currentUser = task.getResult().getUser();
+                createNewUserNode(currentUser.getUid());
             }
         });
+    }
+
+    private void createNewUserNode(String userId) {
+        User user = new User();
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users/" + userId);
+        databaseReference.setValue(user);
     }
 
     private void setupMainFragment() {
@@ -205,62 +209,32 @@ public class MainActivity extends AppCompatActivity implements
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-                ActionBar actionBar = getSupportActionBar();
                 FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
                 int selectedItemId = item.getItemId();
 
-                List<Fragment> fragments = fragmentManager.getFragments();
+                Fragment selectedFragment = null;
 
                 if (selectedItemId == R.id.main) {
-                    closeOpenedFragments(fragments, fragmentTransaction);
-                    fragmentTransaction.show(mainFragment).commit();
+                    selectedFragment = new MainFragment();
                 } else if (selectedItemId == R.id.categories) {
-                    if (foodCategoryFragment == null) {
-                        foodCategoryFragment = new FoodCategoryFragment();
-                        closeOpenedFragments(fragments, fragmentTransaction);
-                        fragmentTransaction.add(R.id.fragment_container, foodCategoryFragment)
-                                .commit();
-                    } else {
-                        closeOpenedFragments(fragments, fragmentTransaction);
-                        fragmentTransaction.show(foodCategoryFragment).commit();
-                    }
+                    selectedFragment = new FoodCategoryFragment();
                 } else if (selectedItemId == R.id.basket) {
-                    if (cartFragment == null) {
-                        cartFragment = CartFragment.newInstance(user);
-                        closeOpenedFragments(fragments, fragmentTransaction);
-                        fragmentTransaction.add(R.id.fragment_container, cartFragment)
-                                .commit();
-                    } else {
-                        closeOpenedFragments(fragments, fragmentTransaction);
-                        fragmentTransaction.show(cartFragment).commit();
-                    }
+                    selectedFragment = new CartFragment();
                 } else if (selectedItemId == R.id.profile) {
                     if (currentUser.isAnonymous()) {
-                        anonymousProfileFragment = new AnonymousProfileFragment();
-                        closeOpenedFragments(fragments, fragmentTransaction);
-                        fragmentTransaction.add(R.id.fragment_container, anonymousProfileFragment)
-                                .commit();
-                        actionBar.setDisplayHomeAsUpEnabled(false);
+                        selectedFragment = new AnonymousProfileFragment();
                     } else if (!currentUser.isAnonymous()) {
-                        authorizedProfileFragment = new AuthorizedProfileFragment();
-                        closeOpenedFragments(fragments, fragmentTransaction);
-                        fragmentTransaction.add(R.id.fragment_container, authorizedProfileFragment)
-                                .commit();
-                    } else {
-                        closeOpenedFragments(fragments, fragmentTransaction);
-                        fragmentTransaction.show(cartFragment).commit();
+                        selectedFragment = new AuthorizedProfileFragment();
                     }
                 }
-                return true;
 
+                if (selectedFragment != null) {
+                    fragmentTransaction.replace(R.id.fragment_container, selectedFragment).commit();
+                }
+
+                return true;
             }
         });
-    }
-
-    private void closeOpenedFragments(List<Fragment> fragments, FragmentTransaction fragmentTransaction) {
-        for (Fragment fragment : fragments) {
-            fragmentTransaction.hide(fragment);
-        }
     }
 
     private void setLocale(String languageCode) {
@@ -280,6 +254,11 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void changeItemState(int itemId) {
         bottomNavigationItemView.setSelectedItemId(itemId);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 
     public void toggleBottomNavigationViewVisibility(Boolean isVisible) {

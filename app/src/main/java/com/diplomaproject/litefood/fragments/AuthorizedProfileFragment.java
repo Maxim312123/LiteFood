@@ -22,10 +22,13 @@ import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.diplomaproject.litefood.FirebaseService;
 import com.diplomaproject.litefood.R;
 import com.diplomaproject.litefood.UserViewModel;
 import com.diplomaproject.litefood.activities.ProfileEditingActivity;
+import com.diplomaproject.litefood.data.User;
 import com.diplomaproject.litefood.databinding.FragmentAuthorizedProfileBinding;
+import com.diplomaproject.litefood.repository.FirebaseRealtimeDatabaseRepository;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -40,6 +43,8 @@ public class AuthorizedProfileFragment extends Fragment implements MenuProvider 
     private TextView tvName;
     private UserViewModel userViewModel;
     private MaterialToolbar toolbar;
+    private FirebaseRealtimeDatabaseRepository realtimeDatabaseRepository;
+    private FirebaseAuth firebaseAuth = FirebaseService.INSTANCE.getAuth();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -66,7 +71,7 @@ public class AuthorizedProfileFragment extends Fragment implements MenuProvider 
     private void bindUserDataToUI() {
         userViewModel.getUser().observe(getViewLifecycleOwner(), user -> {
             tvName.setText(user.getName() != null ? user.getName() : getString(R.string.authorized_profile_name_not_added));
-            etPhoneNumber.setText(user.getPhoneNumber());
+            etPhoneNumber.setText(user.getPhoneNumber() != null ? user.getPhoneNumber() : getString(R.string.authorized_profile_phone_number_not_added));
             etDateOfBirth.setText(user.getDateOfBirth() != null ? user.getDateOfBirth() : getString(R.string.authorized_profile_date_of_birth_not_added));
             etGender.setText(user.getGender() != null ? user.getGender() : getString(R.string.authorized_profile_gender_not_added));
             etEmail.setText(user.getEmail() != null ? user.getEmail() : getString(R.string.authorized_profile_email_not_added));
@@ -101,6 +106,7 @@ public class AuthorizedProfileFragment extends Fragment implements MenuProvider 
         etEmail = binding.etEmail;
         etPaymentMethod = binding.etPaymentMethod;
         userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+        realtimeDatabaseRepository = FirebaseService.INSTANCE.getRealtimeDatabaseRepository();
     }
 
     @Override
@@ -120,11 +126,12 @@ public class AuthorizedProfileFragment extends Fragment implements MenuProvider 
                         public void onClick(DialogInterface dialog, int which) {
                             FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
                             if (!currentUser.isAnonymous()) {
-                                FirebaseAuth.getInstance().signOut();
+                                firebaseAuth.signOut();
 
-                                FirebaseAuth.getInstance().signInAnonymously()
+                                firebaseAuth.signInAnonymously()
                                         .addOnCompleteListener(task -> {
                                             if (task.isSuccessful()) {
+                                                realtimeDatabaseRepository.createNewUser(firebaseAuth.getCurrentUser().getUid(), new User());
                                                 getFragmentManager().beginTransaction()
                                                         .replace(R.id.fragment_container, new AnonymousProfileFragment())
                                                         .commit();
@@ -152,13 +159,16 @@ public class AuthorizedProfileFragment extends Fragment implements MenuProvider 
                     .setPositiveButton("Да", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+                            FirebaseUser currentUser = firebaseAuth.getCurrentUser();
                             if (!currentUser.isAnonymous()) {
+                                realtimeDatabaseRepository.deleteOldUser(currentUser.getUid());
                                 currentUser.delete().addOnCompleteListener(task -> {
                                     if (task.isSuccessful()) {
                                         FirebaseAuth.getInstance().signInAnonymously()
                                                 .addOnCompleteListener(task1 -> {
                                                     if (task1.isSuccessful()) {
+                                                        String newUserId = firebaseAuth.getCurrentUser().getUid();
+                                                        realtimeDatabaseRepository.createNewUser(newUserId, new User());
                                                         getFragmentManager().beginTransaction()
                                                                 .replace(R.id.fragment_container, new AnonymousProfileFragment())
                                                                 .commit();

@@ -13,7 +13,20 @@
           "package_name": "com.diplomaproject.litefood"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "737753600596-df26v1fra6jbbhkitm6597pvhurk5n3g.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.diplomaproject.litefood",
+            "certificate_hash": "349cc50264051a287509af74bacb0b5df88e8ca0"
+          }
+        },
+        {
+          "client_id": "737753600596-tn6uh9j8bniul8hpbjkpce0lj0pjh8r9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyArpf9OOcTKi5GyjuTEyuGsFJGmlWfZ29E"
@@ -21,7 +34,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "737753600596-tn6uh9j8bniul8hpbjkpce0lj0pjh8r9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

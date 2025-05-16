@@ -23,7 +23,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class EmptyAddressesFragment : Fragment() {
 
-    private lateinit var pLauncher: ActivityResultLauncher<Array<String>>
+    private lateinit var permissionsLauncher: ActivityResultLauncher<Array<String>>
 
     private lateinit var binding: FragmentEmptyAddressesBinding
     private lateinit var btnAddAddress: Button
@@ -48,7 +48,7 @@ class EmptyAddressesFragment : Fragment() {
     }
 
     private fun registerPermissionListener() {
-        pLauncher = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
+        permissionsLauncher = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
             if (permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true || permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == true) {
                 getLastLocation()
             } else {
@@ -88,7 +88,7 @@ class EmptyAddressesFragment : Fragment() {
         ) {
             getLastLocation()
         } else {
-            pLauncher.launch(arrayOf(
+            permissionsLauncher.launch(arrayOf(
                 Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.ACCESS_COARSE_LOCATION
             ))
