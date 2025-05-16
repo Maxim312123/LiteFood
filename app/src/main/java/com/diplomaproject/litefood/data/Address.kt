@@ -8,8 +8,8 @@ class Address(
     var street: String,
     var houseNumber: String
 ) : Parcelable {
-    private var apartmentNumber: Int? = null
-    private var comment: String? = null
+   // private var apartmentNumber: Int? = null
+   // private var comment: String? = null
     // var isSelectableAddress: Boolean = false
 
     constructor() : this("", "", "")
@@ -19,28 +19,28 @@ class Address(
         parcel.readString() ?: "",
         parcel.readString() ?: ""
     ) {
-        apartmentNumber = parcel.readValue(kotlin.Int::class.java.classLoader) as? Int
-        comment = parcel.readString()
+      //  apartmentNumber = parcel.readValue(kotlin.Int::class.java.classLoader) as? Int
+       // comment = parcel.readString()
     }
 
-    constructor(
-        city: String,
-        street: String,
-        houseNumber: String,
-        apartmentNumber: Int
-    ) : this(city, street, houseNumber) {
-        this.apartmentNumber = apartmentNumber
-    }
+//    constructor(
+//        city: String,
+//        street: String,
+//        houseNumber: String,
+//        apartmentNumber: Int
+//    ) : this(city, street, houseNumber) {
+//       // this.apartmentNumber = apartmentNumber
+//    }
 
-    constructor(
-        city: String,
-        street: String,
-        houseNumber: String,
-        apartmentNumber: Int,
-        comment: String
-    ) : this(city, street, houseNumber, apartmentNumber) {
-        this.comment = comment
-    }
+//    constructor(
+//        city: String,
+//        street: String,
+//        houseNumber: String,
+//        apartmentNumber: Int,
+//        comment: String
+//    ) : this(city, street, houseNumber, apartmentNumber) {
+//       // this.comment = comment
+//    }
 
     override fun describeContents(): Int {
         return 0

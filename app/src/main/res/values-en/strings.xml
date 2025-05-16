@@ -81,4 +81,6 @@
     <string name="title_spicy_products">Spicy</string>
     <string name="title_favorite_products">Favorite</string>
     <string name="enter_your_phone_number">Enter your phone number</string>
+    <string name="address">Address</string>
+    <string name="subtitle_address_is_not_added">Not added</string>
 </resources>

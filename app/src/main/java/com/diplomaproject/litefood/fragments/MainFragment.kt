@@ -2,7 +2,6 @@ package com.diplomaproject.litefood.fragments
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.os.Handler
 import android.os.Looper
 import android.view.LayoutInflater
 import android.view.Menu
@@ -18,16 +17,19 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import com.diplomaproject.litefood.FirebaseService
 import com.diplomaproject.litefood.FoodSections
 import com.diplomaproject.litefood.R
+import com.diplomaproject.litefood.UserViewModel
 import com.diplomaproject.litefood.activities.MainActivity
 import com.diplomaproject.litefood.adapters.CarouselProductAdapter
 import com.diplomaproject.litefood.adapters.FavoriteProductMainFragmentAdapter
 import com.diplomaproject.litefood.adapters.FoodSectionAdapter
 import com.diplomaproject.litefood.data.Product
+import com.diplomaproject.litefood.data.User
 import com.diplomaproject.litefood.databinding.FragmentMainBinding
 import com.diplomaproject.litefood.fragments.view_models.MainFragmentViewModel
 import com.diplomaproject.litefood.repository.FirestoreDatabaseRepository
@@ -127,6 +129,23 @@ class MainFragment : Fragment(), MenuProvider {
         if (scrollView.visibility == View.VISIBLE) {
             scrollView.post {
                 scrollView.scrollTo(0, savedScrollPosition)
+            }
+        }
+
+        val userViewModel = ViewModelProvider(this).get(UserViewModel::class.java)
+
+        userViewModel.user.observe(viewLifecycleOwner) { user: User ->
+            val address = user.addresses?.get("main")
+
+            if (address != null) {
+                val city = address.city
+                val street = address.street
+                val houseNumber = address.houseNumber ?: ""
+
+                val strAddress = "$city, $street, $houseNumber"
+                toolbar?.subtitle = strAddress
+            } else {
+                toolbar?.subtitle = resources.getString(R.string.subtitle_address_is_not_added)
             }
         }
     }

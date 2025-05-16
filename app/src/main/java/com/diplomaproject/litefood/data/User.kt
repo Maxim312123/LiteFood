@@ -12,7 +12,9 @@ class User() : Parcelable {
     var gender: String? = null
     var email: String? = null
     var paymentMethod: HashMap<String, HashMap<String, Any>>? = null
-    var addresses: HashMap<String, HashMap<String,String>>? = null
+    var addresses: HashMap<String, Address>? = null
+
+    //var addresses: HashMap<String, HashMap<String,String>>? = null
     var basket: HashMap<String, CartProduct>? = null
 
     constructor(_phoneNumber: String) : this() {
@@ -26,8 +28,10 @@ class User() : Parcelable {
         email = parcel.readString()
         paymentMethod =
             parcel.readHashMap(ClassLoader.getSystemClassLoader()) as HashMap<String, HashMap<String, Any>>?
+//        addresses =
+//            parcel.readHashMap(ClassLoader.getSystemClassLoader()) as HashMap<String, HashMap<String,String>>?
         addresses =
-            parcel.readHashMap(ClassLoader.getSystemClassLoader()) as HashMap<String, HashMap<String,String>>?
+            parcel.readHashMap(ClassLoader.getSystemClassLoader()) as HashMap<String, Address>?
         basket = parcel.readHashMap(ClassLoader.getSystemClassLoader())
                 as HashMap<String, CartProduct>?
     }

@@ -40,17 +40,21 @@ class SplashScreen : AppCompatActivity() {
             setTheme(R.style.SplashScreenLight)
         }
 
-        super.onCreate(savedInstanceState)
-
         firebaseCurrentUser = FirebaseAuth.getInstance().currentUser
         sharedPreferencesManager = SharedPreferencesManager.getInstance(this)
         checkPolicyAndAuthenticateUser()
+
+        super.onCreate(savedInstanceState)
+
     }
 
     private fun checkPolicyAndAuthenticateUser() {
         if (isAppliedPolicy()) {
             if (firebaseCurrentUser == null) {
                 firebaseAuthSignInAnonymously()
+            }else{
+                val intent = Intent(this, MainActivity::class.java)
+                startActivity(intent)
             }
         } else if (!isAppliedPolicy()) {
             startActivity(Intent(this, WelcomeActivity::class.java))

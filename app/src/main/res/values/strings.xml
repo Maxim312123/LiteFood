@@ -155,4 +155,6 @@
     <string name="title_for_vegetarians">Для вегетарианцев</string>
     <string name="title_spicy_products">Острое</string>
     <string name="title_favorite_products">Избранное</string>
+    <string name="address">Адрес</string>
+    <string name="subtitle_address_is_not_added">Не добавлен</string>
 </resources>

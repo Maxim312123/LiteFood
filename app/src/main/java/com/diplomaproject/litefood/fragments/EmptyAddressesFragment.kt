@@ -15,6 +15,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.diplomaproject.litefood.R
+import com.diplomaproject.litefood.activities.MainActivity
 import com.diplomaproject.litefood.databinding.FragmentEmptyAddressesBinding
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -48,13 +49,15 @@ class EmptyAddressesFragment : Fragment() {
     }
 
     private fun registerPermissionListener() {
-        permissionsLauncher = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
-            if (permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true || permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == true) {
-                getLastLocation()
-            } else {
-                Toast.makeText(requireActivity(), "Разрешение отклонено", Toast.LENGTH_SHORT).show()
+        permissionsLauncher =
+            registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
+                if (permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true || permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == true) {
+                    getLastLocation()
+                } else {
+                    Toast.makeText(requireActivity(), "Разрешение отклонено", Toast.LENGTH_SHORT)
+                        .show()
+                }
             }
-        }
     }
 
     override fun onResume() {
@@ -88,10 +91,12 @@ class EmptyAddressesFragment : Fragment() {
         ) {
             getLastLocation()
         } else {
-            permissionsLauncher.launch(arrayOf(
-                Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            ))
+            permissionsLauncher.launch(
+                arrayOf(
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                )
+            )
         }
     }
 
@@ -109,8 +114,7 @@ class EmptyAddressesFragment : Fragment() {
                         .addToBackStack("MapsFragment")
                         .replace(R.id.fragment_container, mapsFragment).commit()
 
-                    requireActivity().findViewById<BottomNavigationView>(R.id.bottomNavigationView)
-                        .visibility = View.GONE
+                    (requireActivity() as MainActivity).toggleBottomNavigationViewVisibility(false)
                 } else {
                     Toast.makeText(
                         requireActivity(),

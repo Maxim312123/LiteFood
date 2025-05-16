@@ -19,17 +19,20 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:navigationIcon="@drawable/burger_menu"
-        app:title="Гомель"
+        app:subtitle="Лоев, ул. Батова, 50a"
+        app:subtitleCentered="true"
+        app:title="Адрес"
         app:titleCentered="true"
-        app:titleTextColor="@color/white" />
+        app:titleTextColor="@color/white">
+    </com.google.android.material.appbar.MaterialToolbar>
 
     <com.facebook.shimmer.ShimmerFrameLayout
         android:id="@+id/shimmerLayout"
         android:layout_width="match_parent"
-        android:layout_marginTop="?attr/actionBarSize"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginTop="?attr/actionBarSize">
 
-        <include layout="@layout/layout_skeleton_main_fragment"/>
+        <include layout="@layout/layout_skeleton_main_fragment" />
 
     </com.facebook.shimmer.ShimmerFrameLayout>
 
@@ -40,8 +43,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="?attr/actionBarSize"
         android:layout_marginBottom="?attr/actionBarSize"
-        android:visibility="gone"
-        android:scrollbars="none">
+        android:scrollbars="none"
+        android:visibility="gone">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"

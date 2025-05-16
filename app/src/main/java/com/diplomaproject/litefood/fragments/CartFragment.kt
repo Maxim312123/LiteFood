@@ -235,7 +235,7 @@ class CartFragment : Fragment(), MenuProvider, CartAdapter.OnItemClickListener {
             val mainAddress = addresses.get("main")
             if (mainAddress != null) {
                 tvAddress.text =
-                    "${mainAddress.get("city")}, ${mainAddress.get("street")}, ${mainAddress.get("houseNumber")} "
+                    "${mainAddress.city}, ${mainAddress.street}, ${mainAddress.houseNumber} "
             }
         } else {
             tvAddress.setText(R.string.address_is_not_addded)

@@ -169,11 +169,11 @@ class MapsFragment : Fragment(), MenuProvider {
 
             val city = receivedAddress.locality ?: ""
             val street = receivedAddress.thoroughfare ?: ""
-            val hoseNumber = receivedAddress.subThoroughfare ?: ""
+            val houseNumber = receivedAddress.subThoroughfare ?: ""
             //val apartmentNumber = etApartmentNumber.text.toString().toInt()
             //val comment = etComment.text.toString()
 
-            val address = Address(city, street, hoseNumber)
+            val address = Address(city, street, houseNumber)
 
             return address
         }

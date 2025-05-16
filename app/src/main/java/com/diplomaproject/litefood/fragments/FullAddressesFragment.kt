@@ -64,9 +64,9 @@ class FullAddressesFragment : Fragment(), AddressAdapter.OnItemClickListener {
         val mainUserAddress = user?.addresses?.get(type)
 
         val address = Address(
-            mainUserAddress?.get("city").toString(),
-            mainUserAddress?.get("street").toString(),
-            mainUserAddress?.get("houseNumber").toString()
+            mainUserAddress?.city.toString(),
+            mainUserAddress?.street.toString(),
+            mainUserAddress?.houseNumber.toString()
         )
         return address
     }
