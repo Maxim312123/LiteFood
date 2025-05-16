@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity implements
         init();
         setupMainFragment();
         setupListeners();
-        checkPolicyAndAuthenticateUser();
+       // checkPolicyAndAuthenticateUser();
         if (firebaseCurrentUser != null && !firebaseCurrentUser.isAnonymous()) {
             readUserData();
         }

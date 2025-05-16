@@ -377,11 +377,11 @@ public class AuthorizationActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.close) {
-//            if (currentUser == null) {
-//                signInAnoAnonymously();
-//            } else {
-            onBackPressed();
-            //  }
+            if (currentUser == null) {
+                signInAnoAnonymously();
+            } else {
+                onBackPressed();
+            }
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -389,12 +389,11 @@ public class AuthorizationActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-//        if (currentUser == null) {
-//            signInAnoAnonymously();
-//        } else {
+        if (currentUser == null) {
+            signInAnoAnonymously();
+        } else {
             super.onBackPressed();
-      //  }
-
+        }
     }
 
     private void signInAnoAnonymously() {
@@ -402,11 +401,17 @@ public class AuthorizationActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
+                    createNewUserNode(task.getResult().getUser().getUid());
                     openMainActivity();
                     finish();
                 }
             }
         });
+    }
+
+    private void createNewUserNode(String userId) {
+        User user = new User();
+        databaseReference.child(userId).setValue(user);
     }
 }
 
