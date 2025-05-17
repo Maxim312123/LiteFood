@@ -22,5 +22,6 @@
     <color name="btn_disable_text_color">#FFFFFFFF</color>
     <color name="food_category_background_label_color">#90E94545</color>
     <color name="shimmer_color">#D3D3D3</color>
+    <color name="red_error_color">#FF0000</color>
 </resources>
 

@@ -21,7 +21,7 @@
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
+        android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
         android:backgroundTint="@color/white"
         android:minHeight="?attr/actionBarSize"
@@ -31,10 +31,11 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:title="Выберите свой адрес"
+        app:titleTextColor="@color/black"
         app:titleCentered="true" />
 
     <ImageButton
-        android:id="@+id/imageButtonMyLocation"
+        android:id="@+id/ibUserCurrentLocation"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginEnd="10dp"
@@ -66,7 +67,7 @@
         android:background="@drawable/background_imagebutton"
         android:contentDescription="Zoom out"
         android:src="@drawable/ic_minus"
-        app:layout_constraintBottom_toTopOf="@id/imageButtonMyLocation"
+        app:layout_constraintBottom_toTopOf="@id/ibUserCurrentLocation"
         app:layout_constraintEnd_toEndOf="parent" />
 
     <com.google.android.material.card.MaterialCardView
@@ -109,16 +110,27 @@
                 tools:text="Гомель, ул. Крестьянская, д. 22" />
 
             <TextView
+                android:id="@+id/tvAddressError"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:text="Нужен полный адрес"
+                android:textColor="@color/red_error_color"
+                android:textSize="12sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/editTextAddress" />
+
+            <TextView
                 android:id="@+id/textViewApartmentNumberTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="2dp"
                 android:text="Квартира"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/editTextAddress" />
+                app:layout_constraintTop_toBottomOf="@+id/tvAddressError" />
 
             <EditText
                 android:id="@+id/editTextApartmentNumber"
@@ -136,12 +148,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="2dp"
                 android:text="Комментарий к адресу"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toEndOf="@+id/textViewApartmentNumberTitle"
-                app:layout_constraintTop_toBottomOf="@id/editTextAddress" />
+                app:layout_constraintTop_toBottomOf="@+id/tvAddressError" />
 
             <EditText
                 android:id="@+id/editTextComment"
